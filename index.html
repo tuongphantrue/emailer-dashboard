@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fleet — tuongphantrue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1116;
+    --panel:#161B22;
+    --panel-hi:#1C2330;
+    --line:#2A3140;
+    --text:#E9EBEF;
+    --muted:#8B93A1;
+    --amber:#F2A65A;
+    --amber-dim:#7A5A34;
+    --green:#4ADE80;
+    --red:#F87171;
+    --grey:#5B6472;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 15% -10%, #182031 0%, transparent 60%),
+      var(--ink);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:980px;margin:0 auto;padding:56px 24px 100px;}
+
+  header{margin-bottom:44px;}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    color:var(--amber);
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:14px;
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--amber);box-shadow:0 0 8px var(--amber);animation:pulse 2s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+  h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:40px;
+    line-height:1.1;
+    margin:0 0 12px;
+    letter-spacing:-0.01em;
+  }
+  h1 span{color:var(--muted);font-weight:500;}
+  .sub{color:var(--muted);font-size:15px;max-width:560px;line-height:1.6;}
+  .sub a{color:var(--amber);text-decoration:none;border-bottom:1px solid var(--amber-dim);}
+  .sub a:hover{border-color:var(--amber);}
+
+  .toolbar{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    margin:28px 0 8px;
+    flex-wrap:wrap;
+  }
+  .token-box{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:8px 12px;
+    flex:1;
+    min-width:260px;
+  }
+  .token-box input{
+    background:transparent;
+    border:none;
+    outline:none;
+    color:var(--text);
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+    width:100%;
+  }
+  .token-box input::placeholder{color:var(--grey);}
+  .token-box label{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);white-space:nowrap;}
+  button.ghost{
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--muted);
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    padding:9px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:.15s;
+  }
+  button.ghost:hover{border-color:var(--amber-dim);color:var(--text);}
+  .rate{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--grey);margin:10px 2px 0;}
+
+  .board{
+    margin-top:28px;
+    border-top:1px solid var(--line);
+  }
+  .row{
+    display:grid;
+    grid-template-columns:18px 1.7fr 1fr 1fr 90px;
+    align-items:center;
+    gap:18px;
+    padding:18px 4px;
+    border-bottom:1px solid var(--line);
+    transition:background .15s;
+  }
+  .row:hover{background:var(--panel);}
+  .light{width:9px;height:9px;border-radius:50%;background:var(--grey);}
+  .light.success{background:var(--green);box-shadow:0 0 8px rgba(74,222,128,.6);}
+  .light.failure{background:var(--red);box-shadow:0 0 8px rgba(248,113,113,.6);}
+  .light.pending{background:var(--amber);box-shadow:0 0 8px rgba(242,166,90,.6);animation:pulse 1.4s ease-in-out infinite;}
+
+  .name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15.5px;}
+  .name a{color:var(--text);text-decoration:none;}
+  .name a:hover{color:var(--amber);}
+  .meta{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--grey);margin-top:3px;}
+
+  .status-text{font-family:'JetBrains Mono',monospace;font-size:12.5px;}
+  .status-text.success{color:var(--green);}
+  .status-text.failure{color:var(--red);}
+  .status-text.pending{color:var(--amber);}
+  .status-text.unknown{color:var(--grey);}
+  .when{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);margin-top:3px;}
+
+  .pulse-track{display:flex;gap:3px;align-items:flex-end;height:22px;}
+  .pulse-bar{width:5px;border-radius:1px;background:var(--line);}
+  .pulse-bar.success{background:var(--green);}
+  .pulse-bar.failure{background:var(--red);}
+
+  .run-btn{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    background:var(--panel-hi);
+    border:1px solid var(--line);
+    color:var(--muted);
+    padding:7px 10px;
+    border-radius:6px;
+    cursor:pointer;
+    text-align:center;
+    transition:.15s;
+    justify-self:end;
+  }
+  .run-btn:hover{border-color:var(--amber);color:var(--amber);}
+  .run-btn:disabled{opacity:.35;cursor:not-allowed;}
+  .run-btn.busy{color:var(--amber);border-color:var(--amber-dim);}
+
+  footer{
+    margin-top:48px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11.5px;
+    color:var(--grey);
+    line-height:1.8;
+  }
+  footer a{color:var(--grey);}
+
+  @media (max-width:640px){
+    .row{grid-template-columns:14px 1fr 76px;grid-template-areas:"a b c" "a d d";}
+    .light{grid-area:a;}
+    .name{grid-area:b;}
+    .status-col{grid-area:c;}
+    .pulse-col{display:none;}
+    .run-btn{grid-area:d;justify-self:start;margin-top:8px;}
+    h1{font-size:30px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow"><span class="dot"></span>fleet status · live</div>
+    <h1>tuongphantrue<span> / emailer fleet</span></h1>
+    <div class="sub">
+      Nine small bots, each scraping a number and mailing it out on a schedule.
+      This reads their run history straight from the
+      <a href="https://docs.github.com/en/rest/actions/workflow-runs" target="_blank" rel="noopener">GitHub Actions API</a> —
+      nothing is stored, nothing runs on a server.
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="token-box">
+      <label for="tok">TOKEN</label>
+      <input id="tok" type="password" placeholder="optional — paste a fine-grained PAT to enable Run now">
+    </div>
+    <button class="ghost" id="saveTok">save locally</button>
+    <button class="ghost" id="refresh">↻ refresh</button>
+  </div>
+  <div class="rate" id="rateInfo"></div>
+
+  <div class="board" id="board">
+    <!-- rows injected here -->
+  </div>
+
+  <footer>
+    data via api.github.com · unauthenticated reads, 60 req/hr per IP<br>
+    a token (repo + workflow scope) is only used client-side, in your browser, to trigger runs — it is never sent anywhere but github.com
+  </footer>
+</div>
+
+<script>
+const OWNER = "tuongphantrue";
+const REPOS = [
+  { name: "tech-price-mailer",         workflow: "run.yml" },
+  { name: "house-price-emailer",       workflow: "run.yml" },
+  { name: "9gag-meme-emailer",         workflow: "run.yml" },
+  { name: "phone-tablet-price-emailer",workflow: "run.yml" },
+  { name: "vn-stock-price-emailer",    workflow: "run.yml" },
+  { name: "gold-price-emailer",        workflow: "run.yml" },
+  { name: "currency-rate-emailer",     workflow: "run.yml" },
+  { name: "interest-rate-emailer",     workflow: "run.yml" },
+  { name: "reddit-top-post-emailer",   workflow: "run.yml" },
+];
+
+const board = document.getElementById('board');
+const tokInput = document.getElementById('tok');
+const rateInfo = document.getElementById('rateInfo');
+
+tokInput.value = localStorage.getItem('gh_pat') || '';
+document.getElementById('saveTok').addEventListener('click', () => {
+  localStorage.setItem('gh_pat', tokInput.value.trim());
+  renderAll();
+});
+document.getElementById('refresh').addEventListener('click', renderAll);
+
+function timeAgo(iso){
+  if(!iso) return '—';
+  const s = Math.floor((Date.now() - new Date(iso).getTime())/1000);
+  if(s < 60) return `${s}s ago`;
+  const m = Math.floor(s/60); if(m < 60) return `${m}m ago`;
+  const h = Math.floor(m/60); if(h < 24) return `${h}h ago`;
+  const d = Math.floor(h/24); return `${d}d ago`;
+}
+
+function conclusionInfo(run){
+  if(!run) return {cls:'unknown', label:'no runs yet'};
+  if(run.status !== 'completed') return {cls:'pending', label: run.status.replace('_',' ')};
+  if(run.conclusion === 'success') return {cls:'success', label:'success'};
+  if(run.conclusion === 'failure') return {cls:'failure', label:'failed'};
+  return {cls:'unknown', label: run.conclusion || 'unknown'};
+}
+
+function pulseBars(runs){
+  const last10 = runs.slice(0, 10).reverse();
+  const bars = last10.map(r => {
+    const ok = r.status === 'completed' && r.conclusion === 'success';
+    const cls = r.status !== 'completed' ? '' : (ok ? 'success' : 'failure');
+    const h = 6 + Math.floor(Math.random()*2); // subtle variance, purely visual
+    return `<div class="pulse-bar ${cls}" style="height:${ok ? 20 : 12}px"></div>`;
+  });
+  while(bars.length < 10) bars.unshift(`<div class="pulse-bar" style="height:6px"></div>`);
+  return bars.join('');
+}
+
+function rowSkeleton(repo){
+  return `
+  <div class="row" id="row-${repo.name}">
+    <div class="light"></div>
+    <div>
+      <div class="name"><a href="https://github.com/${OWNER}/${repo.name}" target="_blank" rel="noopener">${repo.name}</a></div>
+      <div class="meta">loading…</div>
+    </div>
+    <div class="status-col">
+      <div class="status-text unknown">checking</div>
+      <div class="when">—</div>
+    </div>
+    <div class="pulse-col pulse-track"></div>
+    <button class="run-btn" disabled>run now</button>
+  </div>`;
+}
+
+async function fetchRuns(repo){
+  const url = `https://api.github.com/repos/${OWNER}/${repo.name}/actions/runs?per_page=10`;
+  const res = await fetch(url, { headers: { 'Accept': 'application/vnd.github+json' }});
+  const remaining = res.headers.get('x-ratelimit-remaining');
+  if(remaining) rateInfo.textContent = `github api rate limit remaining: ${remaining}`;
+  if(!res.ok) throw new Error(`${res.status}`);
+  const data = await res.json();
+  return data.workflow_runs || [];
+}
+
+async function triggerRun(repo, btn){
+  const token = localStorage.getItem('gh_pat');
+  if(!token){ alert('Paste a token above and click "save locally" first — a PAT with workflow scope is needed to trigger runs.'); return; }
+  btn.disabled = true; btn.classList.add('busy'); btn.textContent = 'sending…';
+  try{
+    const res = await fetch(`https://api.github.com/repos/${OWNER}/${repo.name}/actions/workflows/${repo.workflow}/dispatches`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/vnd.github+json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ ref: 'main' })
+    });
+    if(res.status === 204){
+      btn.textContent = 'triggered ✓';
+      setTimeout(() => loadRepo(repo), 3000);
+    } else if(res.status === 401 || res.status === 403){
+      btn.textContent = 'auth failed';
+    } else {
+      btn.textContent = `error ${res.status}`;
+    }
+  }catch(e){
+    btn.textContent = 'error';
+  }
+  setTimeout(() => { btn.disabled = false; btn.classList.remove('busy'); btn.textContent = 'run now'; }, 2500);
+}
+
+async function loadRepo(repo){
+  const row = document.getElementById(`row-${repo.name}`);
+  try{
+    const runs = await fetchRuns(repo);
+    const latest = runs[0];
+    const info = conclusionInfo(latest);
+    row.querySelector('.light').className = `light ${info.cls}`;
+    row.querySelector('.meta').textContent = latest ? `#${latest.run_number} · ${latest.event}` : 'no workflow runs found';
+    row.querySelector('.status-text').className = `status-text ${info.cls}`;
+    row.querySelector('.status-text').textContent = info.label;
+    row.querySelector('.when').textContent = latest ? timeAgo(latest.run_started_at || latest.created_at) : '—';
+    row.querySelector('.pulse-track').innerHTML = pulseBars(runs);
+    const btn = row.querySelector('.run-btn');
+    btn.disabled = false;
+    btn.addEventListener('click', () => triggerRun(repo, btn));
+  }catch(e){
+    row.querySelector('.meta').textContent = `unreachable (${e.message})`;
+    row.querySelector('.status-text').className = 'status-text unknown';
+    row.querySelector('.status-text').textContent = 'no data';
+  }
+}
+
+function renderAll(){
+  board.innerHTML = REPOS.map(rowSkeleton).join('');
+  REPOS.forEach(loadRepo);
+}
+
+renderAll();
+</script>
+</body>
+</html>
