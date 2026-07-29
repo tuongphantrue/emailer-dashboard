@@ -6,6 +6,7 @@
 <title>Fleet — tuongphantrue</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer onload="onGisLoad()"></script>
 <style>
   :root{
     --ink:#0E1116;
@@ -102,6 +103,20 @@
   button.ghost:hover{border-color:var(--amber-dim);color:var(--text);}
   .rate{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--grey);margin:10px 2px 0;}
 
+  button.primary{
+    background:rgba(242,166,90,.08);
+    border:1px solid var(--amber-dim);
+    color:var(--amber);
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    padding:9px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:.15s;
+  }
+  button.primary:hover{background:rgba(242,166,90,.15);border-color:var(--amber);}
+  button.primary:disabled{opacity:.4;cursor:not-allowed;}
+
   .board{
     margin-top:28px;
     border-top:1px solid var(--line);
@@ -138,6 +153,41 @@
   .pulse-bar.success{background:var(--green);}
   .pulse-bar.failure{background:var(--red);}
 
+  .mail-line{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11.5px;
+    color:var(--muted);
+    margin-top:6px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    max-width:100%;
+  }
+  .mail-line:hover{color:var(--amber);}
+  .mail-line .ico{color:var(--amber-dim);flex-shrink:0;}
+  .mail-line .subj{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .mail-line.empty{color:var(--grey);cursor:default;}
+  .mail-line.empty:hover{color:var(--grey);}
+
+  .mail-panel{
+    display:none;
+    grid-column:1 / -1;
+    margin:14px 4px 0 27px;
+    padding:14px 16px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-left:2px solid var(--amber-dim);
+    border-radius:0 8px 8px 0;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    line-height:1.7;
+  }
+  .mail-panel.open{display:block;}
+  .mail-panel .subject{color:var(--text);font-weight:600;margin-bottom:6px;}
+  .mail-panel .body-text{color:var(--muted);white-space:pre-wrap;}
+  .mail-panel .sent{color:var(--grey);font-size:11px;margin-top:10px;}
+
   .run-btn{
     font-family:'JetBrains Mono',monospace;
     font-size:11px;
@@ -163,6 +213,7 @@
     line-height:1.8;
   }
   footer a{color:var(--grey);}
+  footer code{background:var(--panel-hi);padding:1px 6px;border-radius:4px;color:var(--text);}
 
   @media (max-width:640px){
     .row{grid-template-columns:14px 1fr 76px;grid-template-areas:"a b c" "a d d";}
@@ -183,13 +234,15 @@
     <h1>tuongphantrue<span> / emailer fleet</span></h1>
     <div class="sub">
       Nine small bots, each scraping a number and mailing it out on a schedule.
-      This reads their run history straight from the
-      <a href="https://docs.github.com/en/rest/actions/workflow-runs" target="_blank" rel="noopener">GitHub Actions API</a> —
-      nothing is stored, nothing runs on a server.
+      This reads their run history from the
+      <a href="https://docs.github.com/en/rest/actions/workflow-runs" target="_blank" rel="noopener">GitHub Actions API</a>,
+      and — once you connect Gmail below — the actual last email each one sent, read straight from your inbox.
+      Click a bot's ✉ line to expand it.
     </div>
   </header>
 
   <div class="toolbar">
+    <button class="primary" id="connectGmail">Connect Gmail</button>
     <div class="token-box">
       <label for="tok">TOKEN</label>
       <input id="tok" type="password" placeholder="optional — paste a fine-grained PAT to enable Run now">
@@ -204,24 +257,20 @@
   </div>
 
   <footer>
-    data via api.github.com · unauthenticated reads, 60 req/hr per IP<br>
-    a token (repo + workflow scope) is only used client-side, in your browser, to trigger runs — it is never sent anywhere but github.com
+    which repos to track, their gmail search terms, and your gmail client id all live in <code>config.json</code> — this page shouldn't need editing again<br>
+    run status via api.github.com · unauthenticated reads, 60 req/hr per IP<br>
+    last email per bot read live from Gmail via <code>gmail.readonly</code> — the access token lives only in this tab's memory, never persisted, never sent anywhere but google.com<br>
+    a github token (fine-grained: Actions read/write, or classic: repo scope) is only used client-side to trigger runs
   </footer>
 </div>
 
 <script>
-const OWNER = "tuongphantrue";
-const REPOS = [
-  { name: "tech-price-mailer",         workflow: "run.yml" },
-  { name: "house-price-emailer",       workflow: "run.yml" },
-  { name: "9gag-meme-emailer",         workflow: "run.yml" },
-  { name: "phone-tablet-price-emailer",workflow: "run.yml" },
-  { name: "vn-stock-price-emailer",    workflow: "run.yml" },
-  { name: "gold-price-emailer",        workflow: "run.yml" },
-  { name: "currency-rate-emailer",     workflow: "run.yml" },
-  { name: "interest-rate-emailer",     workflow: "run.yml" },
-  { name: "reddit-top-post-emailer",   workflow: "run.yml" },
-];
+// Everything site-specific — which repos to track, how to search Gmail
+// for each one's mail, your OAuth client ID — lives in config.json, not
+// here. Edit that file when you want to change any of it; this script
+// stays generic.
+let OWNER, REPOS, GMAIL_CLIENT_ID;
+const GMAIL_SCOPE = "https://www.googleapis.com/auth/gmail.readonly";
 
 const board = document.getElementById('board');
 const tokInput = document.getElementById('tok');
@@ -234,6 +283,58 @@ document.getElementById('saveTok').addEventListener('click', () => {
 });
 document.getElementById('refresh').addEventListener('click', renderAll);
 
+let gmailToken = null;
+let gmailTokenClient = null;
+let CONFIG_READY = false;
+let GIS_READY = false;
+
+function onGisLoad(){
+  GIS_READY = true;
+  if(CONFIG_READY) initGmailClient();
+}
+
+async function loadConfig(){
+  try{
+    const res = await fetch('./config.json?_=' + Date.now());
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const cfg = await res.json();
+    OWNER = cfg.owner;
+    GMAIL_CLIENT_ID = cfg.gmailClientId;
+    REPOS = cfg.repos || [];
+    CONFIG_READY = true;
+    if(GIS_READY) initGmailClient();
+    renderAll();
+  }catch(e){
+    board.innerHTML = `<div style="padding:20px 4px;color:var(--red);font-family:'JetBrains Mono',monospace;font-size:12.5px;">couldn't load config.json (${e.message}) — make sure it sits in the same folder as index.html.</div>`;
+  }
+}
+
+function initGmailClient(){
+  const btn = document.getElementById('connectGmail');
+  if(GMAIL_CLIENT_ID.startsWith('PASTE_')){
+    btn.textContent = 'add Client ID first';
+    btn.disabled = true;
+    btn.title = 'Set "gmailClientId" in config.json';
+    return;
+  }
+  gmailTokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: GMAIL_CLIENT_ID,
+    scope: GMAIL_SCOPE,
+    callback: (resp) => {
+      if(resp.error){
+        btn.textContent = 'Gmail auth failed — try again';
+        return;
+      }
+      gmailToken = resp.access_token;
+      btn.textContent = 'Gmail connected ✓';
+      REPOS.forEach(loadLatestEmail);
+    }
+  });
+  btn.addEventListener('click', () => {
+    gmailTokenClient.requestAccessToken({ prompt: gmailToken ? '' : 'consent' });
+  });
+}
+
 function timeAgo(iso){
   if(!iso) return '—';
   const s = Math.floor((Date.now() - new Date(iso).getTime())/1000);
@@ -241,6 +342,12 @@ function timeAgo(iso){
   const m = Math.floor(s/60); if(m < 60) return `${m}m ago`;
   const h = Math.floor(m/60); if(h < 24) return `${h}h ago`;
   const d = Math.floor(h/24); return `${d}d ago`;
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
 }
 
 function conclusionInfo(run){
@@ -270,6 +377,7 @@ function rowSkeleton(repo){
     <div>
       <div class="name"><a href="https://github.com/${OWNER}/${repo.name}" target="_blank" rel="noopener">${repo.name}</a></div>
       <div class="meta">loading…</div>
+      <div class="mail-line empty" id="mail-line-${repo.name}"><span class="ico">✉</span><span class="subj">—</span></div>
     </div>
     <div class="status-col">
       <div class="status-text unknown">checking</div>
@@ -277,6 +385,7 @@ function rowSkeleton(repo){
     </div>
     <div class="pulse-col pulse-track"></div>
     <button class="run-btn" disabled>run now</button>
+    <div class="mail-panel" id="mail-panel-${repo.name}"></div>
   </div>`;
 }
 
@@ -339,12 +448,73 @@ async function loadRepo(repo){
   }
 }
 
+async function fetchLatestGmailMessage(query){
+  const listRes = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages?q=${encodeURIComponent(query)}&maxResults=1`, {
+    headers: { 'Authorization': `Bearer ${gmailToken}` }
+  });
+  if(!listRes.ok) throw new Error(`${listRes.status}`);
+  const listData = await listRes.json();
+  if(!listData.messages || !listData.messages.length) return null;
+
+  const id = listData.messages[0].id;
+  const msgRes = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}?format=metadata&metadataHeaders=Subject&metadataHeaders=Date`, {
+    headers: { 'Authorization': `Bearer ${gmailToken}` }
+  });
+  if(!msgRes.ok) throw new Error(`${msgRes.status}`);
+  const msg = await msgRes.json();
+  const headers = (msg.payload && msg.payload.headers) || [];
+  const subject = headers.find(h => h.name === 'Subject')?.value || '(no subject)';
+  const dateHeader = headers.find(h => h.name === 'Date')?.value;
+  return {
+    subject,
+    snippet: msg.snippet || '',
+    date: dateHeader ? new Date(dateHeader).toISOString() : null
+  };
+}
+
+async function loadLatestEmail(repo){
+  const lineEl = document.getElementById(`mail-line-${repo.name}`);
+  const panelEl = document.getElementById(`mail-panel-${repo.name}`);
+
+  if(!repo.gmailQuery){
+    lineEl.classList.add('empty');
+    lineEl.querySelector('.subj').textContent = 'no gmailQuery in config';
+    return;
+  }
+  if(!gmailToken){
+    lineEl.classList.add('empty');
+    lineEl.querySelector('.subj').textContent = 'connect Gmail to see';
+    return;
+  }
+  try{
+    const msg = await fetchLatestGmailMessage(repo.gmailQuery);
+    if(!msg){
+      lineEl.classList.add('empty');
+      lineEl.querySelector('.subj').textContent = 'no matching email found';
+      return;
+    }
+    lineEl.classList.remove('empty');
+    lineEl.querySelector('.subj').textContent = msg.subject;
+    lineEl.title = 'click to view';
+    panelEl.innerHTML = `
+      <div class="subject">${escapeHtml(msg.subject)}</div>
+      <div class="body-text">${escapeHtml(msg.snippet || '(no preview text)')}</div>
+      <div class="sent">received ${msg.date ? timeAgo(msg.date) : '—'} · query: <code>${escapeHtml(repo.gmailQuery)}</code></div>
+    `;
+    lineEl.onclick = () => panelEl.classList.toggle('open');
+  }catch(e){
+    lineEl.classList.add('empty');
+    lineEl.querySelector('.subj').textContent = `gmail error (${e.message})`;
+  }
+}
+
 function renderAll(){
   board.innerHTML = REPOS.map(rowSkeleton).join('');
   REPOS.forEach(loadRepo);
+  REPOS.forEach(loadLatestEmail);
 }
 
-renderAll();
+loadConfig();
 </script>
 </body>
 </html>
