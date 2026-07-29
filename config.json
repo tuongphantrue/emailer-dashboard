@@ -1,0 +1,16 @@
+{
+  "owner": "tuongphantrue",
+  "gmailClientId": "PASTE_YOUR_CLIENT_ID.apps.googleusercontent.com",
+
+  "repos": [
+    { "name": "tech-price-mailer",          "workflow": "run.yml", "gmailQuery": "subject:tech" },
+    { "name": "house-price-emailer",        "workflow": "run.yml", "gmailQuery": "subject:house" },
+    { "name": "9gag-meme-emailer",          "workflow": "run.yml", "gmailQuery": "subject:9gag OR subject:meme" },
+    { "name": "phone-tablet-price-emailer", "workflow": "run.yml", "gmailQuery": "subject:phone OR subject:tablet" },
+    { "name": "vn-stock-price-emailer",     "workflow": "run.yml", "gmailQuery": "subject:stock" },
+    { "name": "gold-price-emailer",         "workflow": "run.yml", "gmailQuery": "subject:gold" },
+    { "name": "currency-rate-emailer",      "workflow": "run.yml", "gmailQuery": "subject:currency OR subject:exchange" },
+    { "name": "interest-rate-emailer",      "workflow": "run.yml", "gmailQuery": "subject:interest" },
+    { "name": "reddit-top-post-emailer",    "workflow": "run.yml", "gmailQuery": "subject:reddit" }
+  ]
+}
