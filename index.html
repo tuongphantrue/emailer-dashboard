@@ -6,7 +6,6 @@
 <title>Fleet — tuongphantrue</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://accounts.google.com/gsi/client" async defer onload="onGisLoad()"></script>
 <style>
   :root{
     --ink:#0E1116;
@@ -102,20 +101,6 @@
   }
   button.ghost:hover{border-color:var(--amber-dim);color:var(--text);}
   .rate{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--grey);margin:10px 2px 0;}
-
-  button.primary{
-    background:rgba(242,166,90,.08);
-    border:1px solid var(--amber-dim);
-    color:var(--amber);
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    padding:9px 14px;
-    border-radius:8px;
-    cursor:pointer;
-    transition:.15s;
-  }
-  button.primary:hover{background:rgba(242,166,90,.15);border-color:var(--amber);}
-  button.primary:disabled{opacity:.4;cursor:not-allowed;}
 
   .board{
     margin-top:28px;
@@ -236,13 +221,12 @@
       Nine small bots, each scraping a number and mailing it out on a schedule.
       This reads their run history from the
       <a href="https://docs.github.com/en/rest/actions/workflow-runs" target="_blank" rel="noopener">GitHub Actions API</a>,
-      and — once you connect Gmail below — the actual last email each one sent, read straight from your inbox.
+      and the last email each one sent, straight out of the repo — nothing outside GitHub involved.
       Click a bot's ✉ line to expand it.
     </div>
   </header>
 
   <div class="toolbar">
-    <button class="primary" id="connectGmail">Connect Gmail</button>
     <div class="token-box">
       <label for="tok">TOKEN</label>
       <input id="tok" type="password" placeholder="optional — paste a fine-grained PAT to enable Run now">
@@ -257,20 +241,18 @@
   </div>
 
   <footer>
-    which repos to track, their gmail search terms, and your gmail client id all live in <code>config.json</code> — this page shouldn't need editing again<br>
+    which repos to track live in <code>config.json</code> — this page shouldn't need editing again<br>
     run status via api.github.com · unauthenticated reads, 60 req/hr per IP<br>
-    last email per bot read live from Gmail via <code>gmail.readonly</code> — the access token lives only in this tab's memory, never persisted, never sent anywhere but google.com<br>
+    last email per bot read from <code>latest.json</code> in each repo via raw.githubusercontent.com — no auth, separate limit<br>
     a github token (fine-grained: Actions read/write, or classic: repo scope) is only used client-side to trigger runs
   </footer>
 </div>
 
 <script>
-// Everything site-specific — which repos to track, how to search Gmail
-// for each one's mail, your OAuth client ID — lives in config.json, not
-// here. Edit that file when you want to change any of it; this script
+// Everything site-specific — which repos to track — lives in config.json,
+// not here. Edit that file when you want to change any of it; this script
 // stays generic.
-let OWNER, REPOS, GMAIL_CLIENT_ID;
-const GMAIL_SCOPE = "https://www.googleapis.com/auth/gmail.readonly";
+let OWNER, REPOS;
 
 const board = document.getElementById('board');
 const tokInput = document.getElementById('tok');
@@ -283,56 +265,17 @@ document.getElementById('saveTok').addEventListener('click', () => {
 });
 document.getElementById('refresh').addEventListener('click', renderAll);
 
-let gmailToken = null;
-let gmailTokenClient = null;
-let CONFIG_READY = false;
-let GIS_READY = false;
-
-function onGisLoad(){
-  GIS_READY = true;
-  if(CONFIG_READY) initGmailClient();
-}
-
 async function loadConfig(){
   try{
     const res = await fetch('./config.json?_=' + Date.now());
     if(!res.ok) throw new Error(`HTTP ${res.status}`);
     const cfg = await res.json();
     OWNER = cfg.owner;
-    GMAIL_CLIENT_ID = cfg.gmailClientId;
     REPOS = cfg.repos || [];
-    CONFIG_READY = true;
-    if(GIS_READY) initGmailClient();
     renderAll();
   }catch(e){
     board.innerHTML = `<div style="padding:20px 4px;color:var(--red);font-family:'JetBrains Mono',monospace;font-size:12.5px;">couldn't load config.json (${e.message}) — make sure it sits in the same folder as index.html.</div>`;
   }
-}
-
-function initGmailClient(){
-  const btn = document.getElementById('connectGmail');
-  if(GMAIL_CLIENT_ID.startsWith('PASTE_')){
-    btn.textContent = 'add Client ID first';
-    btn.disabled = true;
-    btn.title = 'Set "gmailClientId" in config.json';
-    return;
-  }
-  gmailTokenClient = google.accounts.oauth2.initTokenClient({
-    client_id: GMAIL_CLIENT_ID,
-    scope: GMAIL_SCOPE,
-    callback: (resp) => {
-      if(resp.error){
-        btn.textContent = 'Gmail auth failed — try again';
-        return;
-      }
-      gmailToken = resp.access_token;
-      btn.textContent = 'Gmail connected ✓';
-      REPOS.forEach(loadLatestEmail);
-    }
-  });
-  btn.addEventListener('click', () => {
-    gmailTokenClient.requestAccessToken({ prompt: gmailToken ? '' : 'consent' });
-  });
 }
 
 function timeAgo(iso){
@@ -448,63 +391,29 @@ async function loadRepo(repo){
   }
 }
 
-async function fetchLatestGmailMessage(query){
-  const listRes = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages?q=${encodeURIComponent(query)}&maxResults=1`, {
-    headers: { 'Authorization': `Bearer ${gmailToken}` }
-  });
-  if(!listRes.ok) throw new Error(`${listRes.status}`);
-  const listData = await listRes.json();
-  if(!listData.messages || !listData.messages.length) return null;
-
-  const id = listData.messages[0].id;
-  const msgRes = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}?format=metadata&metadataHeaders=Subject&metadataHeaders=Date`, {
-    headers: { 'Authorization': `Bearer ${gmailToken}` }
-  });
-  if(!msgRes.ok) throw new Error(`${msgRes.status}`);
-  const msg = await msgRes.json();
-  const headers = (msg.payload && msg.payload.headers) || [];
-  const subject = headers.find(h => h.name === 'Subject')?.value || '(no subject)';
-  const dateHeader = headers.find(h => h.name === 'Date')?.value;
-  return {
-    subject,
-    snippet: msg.snippet || '',
-    date: dateHeader ? new Date(dateHeader).toISOString() : null
-  };
-}
-
 async function loadLatestEmail(repo){
   const lineEl = document.getElementById(`mail-line-${repo.name}`);
   const panelEl = document.getElementById(`mail-panel-${repo.name}`);
-
-  if(!repo.gmailQuery){
-    lineEl.classList.add('empty');
-    lineEl.querySelector('.subj').textContent = 'no gmailQuery in config';
-    return;
-  }
-  if(!gmailToken){
-    lineEl.classList.add('empty');
-    lineEl.querySelector('.subj').textContent = 'connect Gmail to see';
-    return;
-  }
   try{
-    const msg = await fetchLatestGmailMessage(repo.gmailQuery);
-    if(!msg){
-      lineEl.classList.add('empty');
-      lineEl.querySelector('.subj').textContent = 'no matching email found';
-      return;
-    }
+    const res = await fetch(`https://raw.githubusercontent.com/${OWNER}/${repo.name}/main/latest.json?_=${Date.now()}`);
+    if(!res.ok) throw new Error('not found');
+    const data = await res.json();
+    const subject = data.subject || '(no subject)';
+    const body = data.preview || data.body || '(no preview saved)';
+    const sentAt = data.sent_at || data.timestamp || null;
+
     lineEl.classList.remove('empty');
-    lineEl.querySelector('.subj').textContent = msg.subject;
-    lineEl.title = 'click to view';
+    lineEl.querySelector('.subj').textContent = subject;
+    lineEl.title = 'click to view what was sent';
     panelEl.innerHTML = `
-      <div class="subject">${escapeHtml(msg.subject)}</div>
-      <div class="body-text">${escapeHtml(msg.snippet || '(no preview text)')}</div>
-      <div class="sent">received ${msg.date ? timeAgo(msg.date) : '—'} · query: <code>${escapeHtml(repo.gmailQuery)}</code></div>
+      <div class="subject">${escapeHtml(subject)}</div>
+      <div class="body-text">${escapeHtml(body)}</div>
+      <div class="sent">sent ${sentAt ? timeAgo(sentAt) : '—'}</div>
     `;
     lineEl.onclick = () => panelEl.classList.toggle('open');
   }catch(e){
     lineEl.classList.add('empty');
-    lineEl.querySelector('.subj').textContent = `gmail error (${e.message})`;
+    lineEl.querySelector('.subj').textContent = 'no latest.json yet';
   }
 }
 
