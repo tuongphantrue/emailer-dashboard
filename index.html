@@ -14,21 +14,25 @@
     --line:#E1E1E4;
     --text:#17181A;
     --muted:#6E7178;
-    --grey:#A4A7AD;
+    --grey:#7B7E85;
     --green:#1E8A4C;
     --red:#C13C30;
   }
   *{box-sizing:border-box;}
+  :focus-visible{outline:2px solid var(--text);outline-offset:2px;}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important;transition-duration:0.001ms !important;}
+  }
   body{
     margin:0;
-    background:var(--bg);
+    background:var(--panel);
     color:var(--text);
     font-family:'Inter',sans-serif;
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:980px;margin:0 auto;padding:56px 24px 100px;}
+  .wrap{max-width:1000px;margin:0 auto;padding:64px 24px 120px;}
 
-  header{margin-bottom:44px;}
+  header{margin-bottom:52px;}
   .eyebrow{
     font-family:'JetBrains Mono',monospace;
     font-size:12px;
@@ -38,28 +42,72 @@
     display:flex;
     align-items:center;
     gap:8px;
-    margin-bottom:14px;
+    margin-bottom:18px;
   }
   .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--text);}
   h1{
     font-family:'Space Grotesk',sans-serif;
     font-weight:700;
-    font-size:40px;
-    line-height:1.1;
-    margin:0 0 12px;
-    letter-spacing:-0.01em;
+    font-size:48px;
+    line-height:1.05;
+    margin:0 0 16px;
+    letter-spacing:-0.03em;
     color:var(--text);
   }
   h1 span{color:var(--grey);font-weight:500;}
-  .sub{color:var(--muted);font-size:15px;max-width:560px;line-height:1.6;}
+  .sub{color:var(--muted);font-size:16px;max-width:580px;line-height:1.65;}
   .sub a{color:var(--text);text-decoration:none;border-bottom:1px solid var(--line);}
   .sub a:hover{border-color:var(--text);}
 
+  .stats-row{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:10px;
+    margin-top:32px;
+  }
+  .stat-card{
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:20px 22px;
+    box-shadow:0 1px 2px rgba(16,24,40,.04);
+  }
+  .stat-value{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:34px;
+    letter-spacing:-0.02em;
+    color:var(--text);
+    line-height:1;
+  }
+  .stat-value.success{color:var(--green);}
+  .stat-value.failure{color:var(--red);}
+  .stat-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    margin-top:8px;
+  }
+  @media (max-width:640px){
+    .stats-row{grid-template-columns:1fr 1fr 1fr;gap:8px;}
+    .stat-card{padding:14px 12px;border-radius:12px;}
+    .stat-value{font-size:24px;}
+  }
+
+  .toolbar-card{
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 20px;
+    box-shadow:0 1px 2px rgba(16,24,40,.04);
+    margin-top:32px;
+  }
   .toolbar{
     display:flex;
     gap:10px;
     align-items:center;
-    margin:28px 0 8px;
     flex-wrap:wrap;
   }
   .token-box{
@@ -68,11 +116,13 @@
     gap:8px;
     background:var(--panel);
     border:1px solid var(--line);
-    border-radius:8px;
-    padding:8px 12px;
+    border-radius:12px;
+    padding:10px 14px;
     flex:1;
     min-width:260px;
+    transition:border-color .15s, box-shadow .15s;
   }
+  .token-box:focus-within{border-color:var(--text);box-shadow:0 0 0 3px rgba(23,24,26,.06);}
   .token-box input{
     background:transparent;
     border:none;
@@ -90,45 +140,63 @@
     color:var(--muted);
     font-family:'JetBrains Mono',monospace;
     font-size:12px;
-    padding:9px 14px;
-    border-radius:8px;
+    padding:10px 16px;
+    border-radius:999px;
     cursor:pointer;
     transition:.15s;
   }
   button.ghost:hover{border-color:var(--text);color:var(--text);}
-  .rate{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--grey);margin:10px 2px 0;}
+  button.ghost:active{background:var(--panel-hi);}
+  .rate{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--grey);margin:12px 4px 0;}
 
   .board{
-    margin-top:28px;
-    border-top:1px solid var(--line);
+    margin-top:32px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
   }
   .row{
     display:grid;
-    grid-template-columns:18px 1.7fr 1fr 1fr 90px;
+    grid-template-columns:18px 1.7fr 1fr 1fr 96px;
     align-items:center;
     gap:18px;
-    padding:18px 4px;
-    border-bottom:1px solid var(--line);
-    transition:background .15s;
+    padding:22px 22px;
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:16px;
+    box-shadow:0 1px 2px rgba(16,24,40,.04);
+    transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
   }
-  .row:hover{background:var(--panel);}
+  .row:hover{
+    border-color:#D4D4D8;
+    box-shadow:0 8px 20px rgba(16,24,40,.08);
+    transform:translateY(-2px);
+  }
   .light{width:9px;height:9px;border-radius:50%;background:var(--grey);}
   .light.success{background:var(--green);}
   .light.failure{background:var(--red);}
   .light.pending{background:var(--grey);animation:pulse 1.4s ease-in-out infinite;}
   @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
 
-  .name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:15.5px;}
+  .name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;letter-spacing:-0.01em;}
   .name a{color:var(--text);text-decoration:none;}
   .name a:hover{text-decoration:underline;}
-  .meta{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--grey);margin-top:3px;}
+  .meta{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--grey);margin-top:4px;}
 
-  .status-text{font-family:'JetBrains Mono',monospace;font-size:12.5px;}
-  .status-text.success{color:var(--green);}
-  .status-text.failure{color:var(--red);}
-  .status-text.pending{color:var(--muted);}
-  .status-text.unknown{color:var(--grey);}
-  .when{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);margin-top:3px;}
+  .status-text{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    font-weight:600;
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:999px;
+    letter-spacing:.02em;
+  }
+  .status-text.success{color:var(--green);background:rgba(30,138,76,.1);}
+  .status-text.failure{color:var(--red);background:rgba(193,60,48,.1);}
+  .status-text.pending{color:var(--muted);background:var(--panel-hi);}
+  .status-text.unknown{color:var(--grey);background:var(--panel);}
+  .when{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);margin-top:6px;}
 
   .pulse-track{display:flex;gap:3px;align-items:flex-end;height:22px;}
   .pulse-bar{width:5px;border-radius:1px;background:var(--line);}
@@ -139,7 +207,7 @@
     font-family:'JetBrains Mono',monospace;
     font-size:11.5px;
     color:var(--muted);
-    margin-top:6px;
+    margin-top:8px;
     cursor:pointer;
     display:flex;
     align-items:center;
@@ -147,25 +215,34 @@
     max-width:100%;
   }
   .mail-line:hover{color:var(--text);}
-  .mail-line .ico{color:var(--grey);flex-shrink:0;}
+  .mail-line .ico{color:var(--grey);flex-shrink:0;display:inline-flex;}
   .mail-line .subj{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .mail-line.empty{color:var(--grey);cursor:default;}
   .mail-line.empty:hover{color:var(--grey);}
 
   .mail-panel{
-    display:none;
+    max-height:0;
+    opacity:0;
+    overflow:hidden;
     grid-column:1 / -1;
-    margin:14px 4px 0 27px;
-    padding:14px 16px;
+    margin:0;
+    padding:0 18px;
     background:var(--panel);
-    border:1px solid var(--line);
-    border-left:2px solid var(--text);
-    border-radius:0 8px 8px 0;
+    border:1px solid transparent;
+    border-left:3px solid var(--text);
+    border-radius:0 12px 12px 0;
     font-family:'JetBrains Mono',monospace;
     font-size:12px;
     line-height:1.7;
+    transition:max-height .25s ease, opacity .2s ease, margin-top .25s ease, padding .25s ease;
   }
-  .mail-panel.open{display:block;}
+  .mail-panel.open{
+    max-height:400px;
+    opacity:1;
+    margin-top:16px;
+    padding:16px 18px;
+    border-color:var(--line);
+  }
   .mail-panel .subject{color:var(--text);font-weight:600;margin-bottom:6px;}
   .mail-panel .body-text{color:var(--muted);white-space:pre-wrap;}
   .mail-panel .sent{color:var(--grey);font-size:11px;margin-top:10px;}
@@ -173,22 +250,24 @@
   .run-btn{
     font-family:'JetBrains Mono',monospace;
     font-size:11px;
-    background:var(--panel-hi);
-    border:1px solid var(--line);
-    color:var(--muted);
-    padding:7px 10px;
-    border-radius:6px;
+    font-weight:600;
+    background:var(--text);
+    border:1px solid var(--text);
+    color:var(--bg);
+    padding:9px 16px;
+    border-radius:999px;
     cursor:pointer;
     text-align:center;
     transition:.15s;
     justify-self:end;
   }
-  .run-btn:hover{border-color:var(--text);color:var(--text);}
-  .run-btn:disabled{opacity:.35;cursor:not-allowed;}
-  .run-btn.busy{color:var(--text);border-color:var(--text);}
+  .run-btn:hover{background:#000;border-color:#000;}
+  .run-btn:active:not(:disabled){transform:scale(.96);}
+  .run-btn:disabled{opacity:.3;cursor:not-allowed;background:var(--panel-hi);border-color:var(--line);color:var(--muted);}
+  .run-btn.busy{background:var(--bg);color:var(--text);border-color:var(--text);}
 
   footer{
-    margin-top:48px;
+    margin-top:56px;
     font-family:'JetBrains Mono',monospace;
     font-size:11.5px;
     color:var(--grey);
@@ -198,13 +277,13 @@
   footer code{background:var(--panel-hi);padding:1px 6px;border-radius:4px;color:var(--text);}
 
   @media (max-width:640px){
-    .row{grid-template-columns:14px 1fr 76px;grid-template-areas:"a b c" "a d d";}
+    .row{grid-template-columns:14px 1fr 76px;grid-template-areas:"a b c" "a d d";padding:18px;}
     .light{grid-area:a;}
     .name{grid-area:b;}
     .status-col{grid-area:c;}
     .pulse-col{display:none;}
-    .run-btn{grid-area:d;justify-self:start;margin-top:8px;}
-    h1{font-size:30px;}
+    .run-btn{grid-area:d;justify-self:start;margin-top:10px;}
+    h1{font-size:34px;}
   }
 </style>
 </head>
@@ -219,19 +298,36 @@
       This reads their run history from the
       <a href="https://docs.github.com/en/rest/actions/workflow-runs" target="_blank" rel="noopener">GitHub Actions API</a>,
       and the last email each one sent, straight out of the repo — nothing outside GitHub involved.
-      Click a bot's ✉ line to expand it.
+      Click a bot's mail line to expand it.
     </div>
   </header>
 
-  <div class="toolbar">
-    <div class="token-box">
-      <label for="tok">TOKEN</label>
-      <input id="tok" type="password" placeholder="optional — paste a fine-grained PAT to enable Run now">
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-value" id="statTotal">—</div>
+      <div class="stat-label">bots tracked</div>
     </div>
-    <button class="ghost" id="saveTok">save locally</button>
-    <button class="ghost" id="refresh">↻ refresh</button>
+    <div class="stat-card">
+      <div class="stat-value success" id="statHealthy">—</div>
+      <div class="stat-label">healthy</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value failure" id="statFailing">—</div>
+      <div class="stat-label">failing</div>
+    </div>
   </div>
-  <div class="rate" id="rateInfo"></div>
+
+  <div class="toolbar-card">
+    <div class="toolbar">
+      <div class="token-box">
+        <label for="tok">TOKEN</label>
+        <input id="tok" type="password" placeholder="optional — paste a fine-grained PAT to enable Run now">
+      </div>
+      <button class="ghost" id="saveTok">save locally</button>
+      <button class="ghost" id="refresh">↻ refresh</button>
+    </div>
+    <div class="rate" id="rateInfo"></div>
+  </div>
 
   <div class="board" id="board">
     <!-- rows injected here -->
@@ -317,7 +413,7 @@ function rowSkeleton(repo){
     <div>
       <div class="name"><a href="https://github.com/${OWNER}/${repo.name}" target="_blank" rel="noopener">${repo.name}</a></div>
       <div class="meta">loading…</div>
-      <div class="mail-line empty" id="mail-line-${repo.name}"><span class="ico">✉</span><span class="subj">—</span></div>
+      <div class="mail-line empty" id="mail-line-${repo.name}" tabindex="0" role="button" aria-expanded="false"><span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-10 5L2 7"/></svg></span><span class="subj">—</span></div>
     </div>
     <div class="status-col">
       <div class="status-text unknown">checking</div>
@@ -386,6 +482,13 @@ async function loadRepo(repo){
     row.querySelector('.status-text').className = 'status-text unknown';
     row.querySelector('.status-text').textContent = 'no data';
   }
+  refreshStats();
+}
+
+function refreshStats(){
+  document.getElementById('statTotal').textContent = REPOS.length;
+  document.getElementById('statHealthy').textContent = document.querySelectorAll('.light.success').length;
+  document.getElementById('statFailing').textContent = document.querySelectorAll('.light.failure').length;
 }
 
 async function loadLatestEmail(repo){
@@ -407,7 +510,14 @@ async function loadLatestEmail(repo){
       <div class="body-text">${escapeHtml(body)}</div>
       <div class="sent">sent ${sentAt ? timeAgo(sentAt) : '—'}</div>
     `;
-    lineEl.onclick = () => panelEl.classList.toggle('open');
+    const toggle = () => {
+      const isOpen = panelEl.classList.toggle('open');
+      lineEl.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    };
+    lineEl.onclick = toggle;
+    lineEl.onkeydown = (e) => {
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); }
+    };
   }catch(e){
     lineEl.classList.add('empty');
     lineEl.querySelector('.subj').textContent = 'no latest.json yet';
@@ -416,6 +526,9 @@ async function loadLatestEmail(repo){
 
 function renderAll(){
   board.innerHTML = REPOS.map(rowSkeleton).join('');
+  document.getElementById('statTotal').textContent = '—';
+  document.getElementById('statHealthy').textContent = '—';
+  document.getElementById('statFailing').textContent = '—';
   REPOS.forEach(loadRepo);
   REPOS.forEach(loadLatestEmail);
 }
