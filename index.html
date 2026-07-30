@@ -149,8 +149,19 @@
   button.ghost:active{background:var(--panel-hi);}
   .rate{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--grey);margin:12px 4px 0;}
 
-  .board{
+  .board-header{
+    display:grid;
+    grid-template-columns:18px 1.7fr 1fr 1fr 96px;
+    gap:18px;
     margin-top:32px;
+    padding:0 22px 10px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;
+    color:var(--grey);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+  }
+  .board{
     display:flex;
     flex-direction:column;
     gap:10px;
@@ -277,6 +288,7 @@
   footer code{background:var(--panel-hi);padding:1px 6px;border-radius:4px;color:var(--text);}
 
   @media (max-width:640px){
+    .board-header{display:none;}
     .row{grid-template-columns:14px 1fr 76px;grid-template-areas:"a b c" "a d d";padding:18px;}
     .light{grid-area:a;}
     .name{grid-area:b;}
@@ -329,6 +341,13 @@
     <div class="rate" id="rateInfo"></div>
   </div>
 
+  <div class="board-header">
+    <div></div>
+    <div>bot</div>
+    <div>status</div>
+    <div>history</div>
+    <div></div>
+  </div>
   <div class="board" id="board">
     <!-- rows injected here -->
   </div>
