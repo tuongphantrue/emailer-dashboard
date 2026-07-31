@@ -30,7 +30,129 @@
     font-family:'Inter',sans-serif;
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1000px;margin:0 auto;padding:64px 24px 120px;}
+
+  .topbar{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:12px 24px;
+    background:var(--bg);
+    border-bottom:1px solid var(--line);
+    position:sticky;
+    top:0;
+    z-index:10;
+    flex-wrap:wrap;
+  }
+  .app-switch{
+    width:28px;height:28px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:3px;
+    padding:5px;
+    flex-shrink:0;
+  }
+  .app-switch span{background:var(--grey);border-radius:2px;}
+  .app-pill{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;
+    font-size:12px;
+    background:#3730A3;
+    color:#fff;
+    padding:6px 12px;
+    border-radius:8px;
+    flex-shrink:0;
+  }
+  .topbar-search{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:8px 12px;
+    flex:1;
+    max-width:320px;
+    min-width:140px;
+  }
+  .topbar-search svg{color:var(--grey);flex-shrink:0;}
+  .kbd-hint{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    color:var(--grey);
+    background:var(--panel-hi);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:1px 5px;
+    flex-shrink:0;
+  }
+  .topbar-search:focus-within .kbd-hint{display:none;}
+  .topbar-search input{
+    border:none;background:transparent;outline:none;
+    font-family:'Inter',sans-serif;font-size:13px;color:var(--text);width:100%;
+  }
+  .topbar-search input::placeholder{color:var(--grey);}
+  .topbar-right{margin-left:auto;display:flex;align-items:center;gap:16px;}
+  .topbar-link{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color:var(--muted);
+    text-decoration:none;
+  }
+  .topbar-link:hover{color:var(--text);}
+
+  .app-shell{
+    display:flex;
+    align-items:flex-start;
+    max-width:1300px;
+    margin:0 auto;
+  }
+  .sidebar{
+    width:220px;
+    flex-shrink:0;
+    padding:32px 16px;
+    position:sticky;
+    top:57px;
+  }
+  .sidebar-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;
+    color:var(--grey);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    padding:0 12px;
+    margin-bottom:8px;
+  }
+  .nav-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 12px;
+    border-radius:10px;
+    font-family:'Inter',sans-serif;
+    font-size:13.5px;
+    font-weight:500;
+    color:var(--muted);
+    cursor:pointer;
+    transition:.15s;
+    text-decoration:none;
+  }
+  .nav-item .count{
+    margin-left:auto;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    color:var(--grey);
+  }
+  .nav-item.active .count{color:rgba(255,255,255,.7);}
+  .nav-item:hover{background:var(--bg);color:var(--text);}
+  .nav-item .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--grey);}
+  .nav-item.price .dot{background:#1D4ED8;}
+  .nav-item.finance .dot{background:#7C3AED;}
+  .nav-item.social .dot{background:#DB2777;}
+  .nav-item.active{background:#3730A3;color:#fff;}
+  .nav-item.active .dot{background:#fff;}
+
+  .main-content{flex:1;min-width:0;}
+  .wrap{padding:40px 24px 120px;}
 
   header{margin-bottom:52px;}
   .eyebrow{
@@ -48,11 +170,11 @@
   h1{
     font-family:'Space Grotesk',sans-serif;
     font-weight:700;
-    font-size:48px;
-    line-height:1.05;
-    margin:0 0 16px;
-    letter-spacing:-0.03em;
-    color:var(--text);
+    font-size:26px;
+    line-height:1.2;
+    margin:0 0 10px;
+    letter-spacing:-0.01em;
+    color:#3730A3;
   }
   h1 span{color:var(--grey);font-weight:500;}
   .sub{color:var(--muted);font-size:16px;max-width:580px;line-height:1.65;}
@@ -151,9 +273,9 @@
 
   .board-header{
     display:grid;
-    grid-template-columns:18px 1.7fr 1fr 1fr 96px;
+    grid-template-columns:44px 1.6fr 1fr 1fr 96px;
     gap:18px;
-    margin-top:32px;
+    margin-top:20px;
     padding:0 22px 10px;
     font-family:'JetBrains Mono',monospace;
     font-size:10.5px;
@@ -161,14 +283,58 @@
     text-transform:uppercase;
     letter-spacing:.08em;
   }
+  .filter-tabs{
+    display:none;
+    gap:6px;
+    margin-top:28px;
+    flex-wrap:wrap;
+  }
+  .tab{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    font-weight:600;
+    background:transparent;
+    border:1px solid transparent;
+    color:var(--muted);
+    padding:8px 14px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .tab:hover{color:var(--text);}
+  .tab.active{background:var(--text);color:var(--bg);}
   .board{
     display:flex;
     flex-direction:column;
     gap:10px;
   }
+  .empty-state{
+    display:none;
+    text-align:center;
+    padding:52px 24px;
+    background:var(--bg);
+    border:1px solid var(--line);
+    border-radius:16px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    color:var(--muted);
+  }
+  .empty-state .detail{color:var(--text);font-weight:600;}
+  .empty-state .clear-btn{
+    display:inline-block;
+    margin-top:14px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    color:var(--text);
+    text-decoration:underline;
+    cursor:pointer;
+    background:none;
+    border:none;
+    padding:4px;
+  }
   .row{
     display:grid;
-    grid-template-columns:18px 1.7fr 1fr 1fr 96px;
+    grid-template-columns:44px 1.6fr 1fr 1fr 96px;
     align-items:center;
     gap:18px;
     padding:22px 22px;
@@ -183,15 +349,55 @@
     box-shadow:0 8px 20px rgba(16,24,40,.08);
     transform:translateY(-2px);
   }
-  .light{width:9px;height:9px;border-radius:50%;background:var(--grey);}
+  .avatar{
+    position:relative;
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:13px;
+  }
+  .avatar.price{background:rgba(29,78,216,.12);color:#1D4ED8;}
+  .avatar.finance{background:rgba(124,58,237,.12);color:#7C3AED;}
+  .avatar.social{background:rgba(219,39,119,.12);color:#DB2777;}
+  .avatar.none{background:var(--panel-hi);color:var(--muted);}
+  .avatar .light{
+    position:absolute;
+    bottom:-2px;
+    right:-2px;
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    background:var(--grey);
+    border:2.5px solid var(--bg);
+  }
   .light.success{background:var(--green);}
   .light.failure{background:var(--red);}
   .light.pending{background:var(--grey);animation:pulse 1.4s ease-in-out infinite;}
   @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
 
-  .name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;letter-spacing:-0.01em;}
+  .name{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;letter-spacing:-0.01em;display:flex;align-items:center;gap:8px;}
   .name a{color:var(--text);text-decoration:none;}
   .name a:hover{text-decoration:underline;}
+  .tag{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    padding:2px 9px;
+    border-radius:999px;
+    border:1px solid;
+    background:var(--bg);
+    flex-shrink:0;
+  }
+  .tag.price{color:#1D4ED8;border-color:#93B4F5;}
+  .tag.finance{color:#7C3AED;border-color:#C7ACF7;}
+  .tag.social{color:#DB2777;border-color:#F5A8CB;}
   .meta{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--grey);margin-top:4px;}
 
   .status-text{
@@ -288,18 +494,48 @@
   footer code{background:var(--panel-hi);padding:1px 6px;border-radius:4px;color:var(--text);}
 
   @media (max-width:640px){
+    .sidebar{display:none;}
+    .app-shell{display:block;}
+    .topbar-search{display:none;}
+    .filter-tabs{display:flex;}
     .board-header{display:none;}
-    .row{grid-template-columns:14px 1fr 76px;grid-template-areas:"a b c" "a d d";padding:18px;}
-    .light{grid-area:a;}
+    .row{grid-template-columns:40px 1fr 76px;grid-template-areas:"a b c" "a d d";padding:18px;}
+    .avatar{grid-area:a;width:32px;height:32px;font-size:12px;}
     .name{grid-area:b;}
     .status-col{grid-area:c;}
     .pulse-col{display:none;}
     .run-btn{grid-area:d;justify-self:start;margin-top:10px;}
-    h1{font-size:34px;}
+    h1{font-size:22px;}
   }
 </style>
 </head>
 <body>
+
+<div class="topbar">
+  <div class="app-switch"><span></span><span></span><span></span><span></span></div>
+  <div class="app-pill">Fleet</div>
+  <div class="topbar-search">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+    <input id="topSearch" type="text" placeholder="Search bots...">
+    <kbd class="kbd-hint">/</kbd>
+  </div>
+  <div class="topbar-right">
+    <a class="topbar-link" id="ghOrgLink" href="#" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
+</div>
+
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="sidebar-label">views</div>
+    <nav>
+      <a class="nav-item active" data-filter="all"><span class="dot"></span>All bots<span class="count" id="countAll">—</span></a>
+      <a class="nav-item price" data-filter="price"><span class="dot"></span>Price<span class="count" id="countPrice">—</span></a>
+      <a class="nav-item finance" data-filter="finance"><span class="dot"></span>Finance<span class="count" id="countFinance">—</span></a>
+      <a class="nav-item social" data-filter="social"><span class="dot"></span>Social<span class="count" id="countSocial">—</span></a>
+    </nav>
+  </aside>
+
+  <main class="main-content">
 <div class="wrap">
 
   <header>
@@ -339,6 +575,14 @@
       <button class="ghost" id="refresh">↻ refresh</button>
     </div>
     <div class="rate" id="rateInfo"></div>
+    <div class="rate" id="lastUpdated"></div>
+  </div>
+
+  <div class="filter-tabs">
+    <button class="tab active" data-filter="all">All</button>
+    <button class="tab" data-filter="price">Price</button>
+    <button class="tab" data-filter="finance">Finance</button>
+    <button class="tab" data-filter="social">Social</button>
   </div>
 
   <div class="board-header">
@@ -351,6 +595,10 @@
   <div class="board" id="board">
     <!-- rows injected here -->
   </div>
+  <div class="empty-state" id="emptyState">
+    <div>no bots match<span class="detail" id="emptyStateDetail"></span></div>
+    <button class="clear-btn" id="clearFiltersBtn">clear filters</button>
+  </div>
 
   <footer>
     which repos to track live in <code>config.json</code> — this page shouldn't need editing again<br>
@@ -358,6 +606,8 @@
     last email per bot read from <code>latest.json</code> in each repo via raw.githubusercontent.com — no auth, separate limit<br>
     a github token (fine-grained: Actions read/write, or classic: repo scope) is only used client-side to trigger runs
   </footer>
+</div>
+  </main>
 </div>
 
 <script>
@@ -377,6 +627,73 @@ document.getElementById('saveTok').addEventListener('click', () => {
 });
 document.getElementById('refresh').addEventListener('click', renderAll);
 
+let currentFilter = 'all';
+let searchQuery = '';
+function applyFilter(){
+  let visible = 0;
+  document.querySelectorAll('.row').forEach(row => {
+    const matchesCategory = (currentFilter === 'all' || row.dataset.category === currentFilter);
+    const matchesSearch = !searchQuery || row.id.toLowerCase().includes(searchQuery);
+    const show = matchesCategory && matchesSearch;
+    row.style.display = show ? '' : 'none';
+    if(show) visible++;
+  });
+
+  const boardHeader = document.querySelector('.board-header');
+  const emptyState = document.getElementById('emptyState');
+  if(visible === 0){
+    const bits = [];
+    if(currentFilter !== 'all') bits.push(`category "${currentFilter}"`);
+    if(searchQuery) bits.push(`search "${searchQuery}"`);
+    document.getElementById('emptyStateDetail').textContent = bits.length ? ` for ${bits.join(' + ')}` : '';
+    emptyState.style.display = 'block';
+    if(boardHeader) boardHeader.style.display = 'none';
+  }else{
+    emptyState.style.display = 'none';
+    if(boardHeader) boardHeader.style.display = '';
+  }
+}
+function setFilter(filter){
+  currentFilter = filter;
+  document.querySelectorAll('[data-filter]').forEach(el => {
+    el.classList.toggle('active', el.dataset.filter === filter);
+  });
+  applyFilter();
+}
+document.querySelectorAll('[data-filter]').forEach(el => {
+  el.addEventListener('click', () => setFilter(el.dataset.filter));
+});
+document.getElementById('topSearch').addEventListener('input', (e) => {
+  searchQuery = e.target.value.trim().toLowerCase();
+  applyFilter();
+});
+document.getElementById('clearFiltersBtn').addEventListener('click', () => {
+  searchQuery = '';
+  document.getElementById('topSearch').value = '';
+  setFilter('all');
+});
+document.addEventListener('keydown', (e) => {
+  const tag = document.activeElement.tagName;
+  if(e.key === '/' && tag !== 'INPUT' && tag !== 'TEXTAREA'){
+    e.preventDefault();
+    document.getElementById('topSearch').focus();
+  }
+});
+
+function updateSidebarCounts(){
+  const counts = { price: 0, finance: 0, social: 0 };
+  REPOS.forEach(r => { if(counts[r.category] !== undefined) counts[r.category]++; });
+  document.getElementById('countAll').textContent = REPOS.length;
+  document.getElementById('countPrice').textContent = counts.price;
+  document.getElementById('countFinance').textContent = counts.finance;
+  document.getElementById('countSocial').textContent = counts.social;
+}
+
+function updateLastRefreshed(){
+  const el = document.getElementById('lastUpdated');
+  if(el) el.textContent = `updated ${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+}
+
 async function loadConfig(){
   try{
     const res = await fetch('./config.json?_=' + Date.now());
@@ -384,7 +701,15 @@ async function loadConfig(){
     const cfg = await res.json();
     OWNER = cfg.owner;
     REPOS = cfg.repos || [];
+    document.getElementById('ghOrgLink').href = `https://github.com/${OWNER}`;
+    updateSidebarCounts();
     renderAll();
+    updateLastRefreshed();
+    setInterval(() => {
+      REPOS.forEach(loadRepo);
+      REPOS.forEach(loadLatestEmail);
+      updateLastRefreshed();
+    }, 5 * 60 * 1000);
   }catch(e){
     board.innerHTML = `<div style="padding:20px 4px;color:var(--red);font-family:'JetBrains Mono',monospace;font-size:12.5px;">couldn't load config.json (${e.message}) — make sure it sits in the same folder as index.html.</div>`;
   }
@@ -426,11 +751,13 @@ function pulseBars(runs){
 }
 
 function rowSkeleton(repo){
+  const initial = repo.name.charAt(0).toUpperCase();
+  const cat = repo.category || 'none';
   return `
-  <div class="row" id="row-${repo.name}">
-    <div class="light"></div>
+  <div class="row" id="row-${repo.name}" data-category="${cat}">
+    <div class="avatar ${cat}">${initial}<div class="light"></div></div>
     <div>
-      <div class="name"><a href="https://github.com/${OWNER}/${repo.name}" target="_blank" rel="noopener">${repo.name}</a></div>
+      <div class="name"><a href="https://github.com/${OWNER}/${repo.name}" target="_blank" rel="noopener">${repo.name}</a>${repo.category ? `<span class="tag ${repo.category}">${repo.category}</span>` : ''}</div>
       <div class="meta">loading…</div>
       <div class="mail-line empty" id="mail-line-${repo.name}" tabindex="0" role="button" aria-expanded="false"><span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-10 5L2 7"/></svg></span><span class="subj">—</span></div>
     </div>
@@ -548,6 +875,7 @@ function renderAll(){
   document.getElementById('statTotal').textContent = '—';
   document.getElementById('statHealthy').textContent = '—';
   document.getElementById('statFailing').textContent = '—';
+  applyFilter();
   REPOS.forEach(loadRepo);
   REPOS.forEach(loadLatestEmail);
 }
