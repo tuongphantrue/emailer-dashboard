@@ -290,19 +290,19 @@
     flex-wrap:wrap;
   }
   .tab{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
+    font-family:'Inter',sans-serif;
+    font-size:13px;
     font-weight:600;
     background:transparent;
     border:1px solid transparent;
     color:var(--muted);
     padding:8px 14px;
-    border-radius:999px;
+    border-radius:9px;
     cursor:pointer;
     transition:.15s;
   }
   .tab:hover{color:var(--text);}
-  .tab.active{background:var(--text);color:var(--bg);}
+  .tab.active{background:#3730A3;color:#fff;}
   .board{
     display:flex;
     flex-direction:column;
@@ -465,23 +465,23 @@
   .mail-panel .sent{color:var(--grey);font-size:11px;margin-top:10px;}
 
   .run-btn{
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
+    font-family:'Inter',sans-serif;
+    font-size:12.5px;
     font-weight:600;
-    background:var(--text);
-    border:1px solid var(--text);
-    color:var(--bg);
+    background:#3730A3;
+    border:1px solid #3730A3;
+    color:#fff;
     padding:9px 16px;
-    border-radius:999px;
+    border-radius:9px;
     cursor:pointer;
     text-align:center;
     transition:.15s;
     justify-self:end;
   }
-  .run-btn:hover{background:#000;border-color:#000;}
+  .run-btn:hover{background:#2E2884;border-color:#2E2884;}
   .run-btn:active:not(:disabled){transform:scale(.96);}
   .run-btn:disabled{opacity:.3;cursor:not-allowed;background:var(--panel-hi);border-color:var(--line);color:var(--muted);}
-  .run-btn.busy{background:var(--bg);color:var(--text);border-color:var(--text);}
+  .run-btn.busy{background:var(--bg);color:#3730A3;border-color:#3730A3;}
 
   footer{
     margin-top:56px;
@@ -766,7 +766,7 @@ function rowSkeleton(repo){
       <div class="when">—</div>
     </div>
     <div class="pulse-col pulse-track"></div>
-    <button class="run-btn" disabled>run now</button>
+    <button class="run-btn" disabled>Run now</button>
     <div class="mail-panel" id="mail-panel-${repo.name}"></div>
   </div>`;
 }
@@ -805,7 +805,7 @@ async function triggerRun(repo, btn){
   }catch(e){
     btn.textContent = 'error';
   }
-  setTimeout(() => { btn.disabled = false; btn.classList.remove('busy'); btn.textContent = 'run now'; }, 2500);
+  setTimeout(() => { btn.disabled = false; btn.classList.remove('busy'); btn.textContent = 'Run now'; }, 2500);
 }
 
 async function loadRepo(repo){
