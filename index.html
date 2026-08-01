@@ -56,7 +56,7 @@
     font-family:'JetBrains Mono',monospace;
     font-weight:700;
     font-size:12px;
-    background:#3730A3;
+    background:#2563EB;
     color:#fff;
     padding:6px 12px;
     border-radius:8px;
@@ -148,7 +148,7 @@
   .nav-item.price .dot{background:#1D4ED8;}
   .nav-item.finance .dot{background:#7C3AED;}
   .nav-item.social .dot{background:#DB2777;}
-  .nav-item.active{background:#3730A3;color:#fff;}
+  .nav-item.active{background:#2563EB;color:#fff;}
   .nav-item.active .dot{background:#fff;}
 
   .main-content{flex:1;min-width:0;}
@@ -174,64 +174,68 @@
     line-height:1.2;
     margin:0 0 10px;
     letter-spacing:-0.01em;
-    color:#3730A3;
+    color:#2563EB;
   }
   h1 span{color:var(--grey);font-weight:500;}
   .sub{color:var(--muted);font-size:16px;max-width:580px;line-height:1.65;}
   .sub a{color:var(--text);text-decoration:none;border-bottom:1px solid var(--line);}
   .sub a:hover{border-color:var(--text);}
 
-  .stats-row{
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:10px;
+  .content-columns{
+    display:flex;
+    align-items:flex-start;
+    gap:20px;
     margin-top:32px;
   }
-  .stat-card{
+  .side-column{width:300px;flex-shrink:0;}
+  .list-column{flex:1;min-width:0;}
+
+  .side-card{
     background:var(--bg);
     border:1px solid var(--line);
     border-radius:16px;
     padding:20px 22px;
     box-shadow:0 1px 2px rgba(16,24,40,.04);
   }
-  .stat-value{
+  .side-card + .side-card{margin-top:16px;}
+  .side-card-title{
     font-family:'Space Grotesk',sans-serif;
     font-weight:700;
-    font-size:34px;
-    letter-spacing:-0.02em;
-    color:var(--text);
-    line-height:1;
+    font-size:15px;
+    margin-bottom:6px;
   }
-  .stat-value.success{color:var(--green);}
-  .stat-value.failure{color:var(--red);}
-  .stat-label{
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    color:var(--muted);
-    text-transform:uppercase;
-    letter-spacing:.08em;
-    margin-top:8px;
-  }
-  @media (max-width:640px){
-    .stats-row{grid-template-columns:1fr 1fr 1fr;gap:8px;}
-    .stat-card{padding:14px 12px;border-radius:12px;}
-    .stat-value{font-size:24px;}
-  }
-
-  .toolbar-card{
-    background:var(--bg);
-    border:1px solid var(--line);
-    border-radius:16px;
-    padding:18px 20px;
-    box-shadow:0 1px 2px rgba(16,24,40,.04);
-    margin-top:32px;
-  }
-  .toolbar{
+  .metric-row{
     display:flex;
-    gap:10px;
     align-items:center;
-    flex-wrap:wrap;
+    justify-content:space-between;
+    padding:11px 0;
+    border-bottom:1px solid var(--line);
   }
+  .metric-row:last-child{border-bottom:none;}
+  .metric-label{font-size:13px;color:var(--muted);}
+  .metric-value{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;color:var(--text);}
+  .metric-badge{
+    width:30px;height:30px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;font-size:13px;color:#fff;
+    flex-shrink:0;
+  }
+  .metric-badge.success{background:var(--green);}
+  .metric-badge.failure{background:var(--red);}
+
+  @media (max-width:900px){
+    .content-columns{flex-direction:column;}
+    .side-column{width:100%;}
+  }
+  .side-card .token-box{margin-top:2px;}
+  .side-actions{
+    display:flex;
+    gap:8px;
+    margin-top:10px;
+  }
+  .side-actions button.ghost{flex:1;}
   .token-box{
     display:flex;
     align-items:center;
@@ -240,8 +244,7 @@
     border:1px solid var(--line);
     border-radius:12px;
     padding:10px 14px;
-    flex:1;
-    min-width:260px;
+    width:100%;
     transition:border-color .15s, box-shadow .15s;
   }
   .token-box:focus-within{border-color:var(--text);box-shadow:0 0 0 3px rgba(23,24,26,.06);}
@@ -302,7 +305,7 @@
     transition:.15s;
   }
   .tab:hover{color:var(--text);}
-  .tab.active{background:#3730A3;color:#fff;}
+  .tab.active{background:#2563EB;color:#fff;}
   .board{
     display:flex;
     flex-direction:column;
@@ -468,8 +471,8 @@
     font-family:'Inter',sans-serif;
     font-size:12.5px;
     font-weight:600;
-    background:#3730A3;
-    border:1px solid #3730A3;
+    background:#2563EB;
+    border:1px solid #2563EB;
     color:#fff;
     padding:9px 16px;
     border-radius:9px;
@@ -478,10 +481,10 @@
     transition:.15s;
     justify-self:end;
   }
-  .run-btn:hover{background:#2E2884;border-color:#2E2884;}
+  .run-btn:hover{background:#1D4ED8;border-color:#1D4ED8;}
   .run-btn:active:not(:disabled){transform:scale(.96);}
   .run-btn:disabled{opacity:.3;cursor:not-allowed;background:var(--panel-hi);border-color:var(--line);color:var(--muted);}
-  .run-btn.busy{background:var(--bg);color:#3730A3;border-color:#3730A3;}
+  .run-btn.busy{background:var(--bg);color:#2563EB;border-color:#2563EB;}
 
   footer{
     margin-top:56px;
@@ -517,7 +520,7 @@
   <div class="topbar-search">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
     <input id="topSearch" type="text" placeholder="Search bots...">
-    <kbd class="kbd-hint">/</kbd>
+    <kbd class="kbd-hint">Ctrl+K</kbd>
   </div>
   <div class="topbar-right">
     <a class="topbar-link" id="ghOrgLink" href="#" target="_blank" rel="noopener">GitHub ↗</a>
@@ -550,54 +553,61 @@
     </div>
   </header>
 
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-value" id="statTotal">—</div>
-      <div class="stat-label">bots tracked</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value success" id="statHealthy">—</div>
-      <div class="stat-label">healthy</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-value failure" id="statFailing">—</div>
-      <div class="stat-label">failing</div>
-    </div>
-  </div>
-
-  <div class="toolbar-card">
-    <div class="toolbar">
-      <div class="token-box">
-        <label for="tok">TOKEN</label>
-        <input id="tok" type="password" placeholder="optional — paste a fine-grained PAT to enable Run now">
+  <div class="content-columns">
+    <div class="side-column">
+      <div class="side-card">
+        <div class="side-card-title">Fleet overview</div>
+        <div class="metric-row">
+          <span class="metric-label">Bots tracked</span>
+          <span class="metric-value" id="statTotal">—</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Healthy</span>
+          <span class="metric-badge success" id="statHealthy">—</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Failing</span>
+          <span class="metric-badge failure" id="statFailing">—</span>
+        </div>
       </div>
-      <button class="ghost" id="saveTok">save locally</button>
-      <button class="ghost" id="refresh">↻ refresh</button>
+      <div class="side-card">
+        <div class="side-card-title">Controls</div>
+        <div class="token-box">
+          <label for="tok">TOKEN</label>
+          <input id="tok" type="password" placeholder="paste a fine-grained PAT to enable Run now">
+        </div>
+        <div class="side-actions">
+          <button class="ghost" id="saveTok">save locally</button>
+          <button class="ghost" id="refresh">↻ refresh</button>
+        </div>
+        <div class="rate" id="rateInfo"></div>
+        <div class="rate" id="lastUpdated"></div>
+      </div>
     </div>
-    <div class="rate" id="rateInfo"></div>
-    <div class="rate" id="lastUpdated"></div>
-  </div>
 
-  <div class="filter-tabs">
-    <button class="tab active" data-filter="all">All</button>
-    <button class="tab" data-filter="price">Price</button>
-    <button class="tab" data-filter="finance">Finance</button>
-    <button class="tab" data-filter="social">Social</button>
-  </div>
+    <div class="list-column">
+      <div class="filter-tabs">
+        <button class="tab active" data-filter="all">All</button>
+        <button class="tab" data-filter="price">Price</button>
+        <button class="tab" data-filter="finance">Finance</button>
+        <button class="tab" data-filter="social">Social</button>
+      </div>
 
-  <div class="board-header">
-    <div></div>
-    <div>bot</div>
-    <div>status</div>
-    <div>history</div>
-    <div></div>
-  </div>
-  <div class="board" id="board">
-    <!-- rows injected here -->
-  </div>
-  <div class="empty-state" id="emptyState">
-    <div>no bots match<span class="detail" id="emptyStateDetail"></span></div>
-    <button class="clear-btn" id="clearFiltersBtn">clear filters</button>
+      <div class="board-header">
+        <div></div>
+        <div>bot</div>
+        <div>status</div>
+        <div>history</div>
+        <div></div>
+      </div>
+      <div class="board" id="board">
+        <!-- rows injected here -->
+      </div>
+      <div class="empty-state" id="emptyState">
+        <div>no bots match<span class="detail" id="emptyStateDetail"></span></div>
+        <button class="clear-btn" id="clearFiltersBtn">clear filters</button>
+      </div>
+    </div>
   </div>
 
   <footer>
@@ -673,10 +683,11 @@ document.getElementById('clearFiltersBtn').addEventListener('click', () => {
   setFilter('all');
 });
 document.addEventListener('keydown', (e) => {
-  const tag = document.activeElement.tagName;
-  if(e.key === '/' && tag !== 'INPUT' && tag !== 'TEXTAREA'){
+  if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
     e.preventDefault();
-    document.getElementById('topSearch').focus();
+    const box = document.getElementById('topSearch');
+    box.focus();
+    box.select();
   }
 });
 
