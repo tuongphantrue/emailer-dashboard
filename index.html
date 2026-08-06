@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fleet — tuongphantrue</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 
 /* ---------- Design tokens ---------- */
@@ -34,11 +34,10 @@
   --radius-pill: 999px;
 
   --shadow-card: 0 1px 2px rgba(16,24,40,.04);
-  --shadow-hover: 0 8px 20px rgba(16,24,40,.08);
 
-  --font-display: 'Space Grotesk', sans-serif;
+  --font-display: 'Inter', sans-serif;
   --font-body:    'Inter', sans-serif;
-  --font-mono:    'JetBrains Mono', monospace;
+  --font-mono:    'Inter', sans-serif;
 }
 
 /* ---------- Reset & accessibility base ---------- */
@@ -103,6 +102,7 @@ body{
   font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);
   text-transform:uppercase;letter-spacing:.08em;padding:0 12px;margin-bottom:8px;
 }
+.sidebar-label-2{margin-top:24px;}
 .nav-item{
   display:flex;align-items:center;gap:10px;
   padding:9px 12px;border-radius:10px;
@@ -119,49 +119,18 @@ body{
 .nav-item .count{margin-left:auto;font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);}
 .nav-item.active .count{color:rgba(255,255,255,.7);}
 
+.sidebar-token{padding:0 12px;}
+
 .main-content{flex:1;min-width:0;}
-.wrap{padding:40px 24px 120px;}
+.wrap{padding:40px 24px 60px;}
 
 /* ---------- Page header ---------- */
-header{margin-bottom:52px;}
-.eyebrow{
-  font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;
-  color:var(--text-secondary);text-transform:uppercase;
-  display:flex;align-items:center;gap:8px;margin-bottom:18px;
-}
-.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--text);}
+header{margin-bottom:28px;}
 h1{
-  font-family:var(--font-display);font-weight:700;font-size:26px;line-height:1.2;
-  margin:0 0 10px;letter-spacing:-0.01em;color:var(--brand);
+  font-family:var(--font-display);font-weight:700;font-size:20px;line-height:1.3;
+  margin:0;letter-spacing:-0.01em;color:var(--text);
 }
-h1 span{color:var(--text-tertiary);font-weight:500;}
-.sub{color:var(--text-secondary);font-size:16px;max-width:580px;line-height:1.65;}
-.sub a{color:var(--text);text-decoration:none;border-bottom:1px solid var(--border);}
-.sub a:hover{border-color:var(--text);}
-
-/* ---------- Two-column content ---------- */
-.content-columns{display:flex;align-items:flex-start;gap:20px;margin-top:32px;}
-.side-column{width:300px;flex-shrink:0;}
-.list-column{flex:1;min-width:0;}
-
-.side-card{
-  background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);
-  padding:20px 22px;box-shadow:var(--shadow-card);
-}
-.side-card + .side-card{margin-top:16px;}
-.side-card-title{font-family:var(--font-display);font-weight:700;font-size:15px;margin-bottom:6px;}
-
-.metric-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);}
-.metric-row:last-child{border-bottom:none;}
-.metric-label{font-size:13px;color:var(--text-secondary);}
-.metric-value{font-family:var(--font-display);font-weight:700;font-size:20px;}
-.metric-badge{
-  width:30px;height:30px;border-radius:50%;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-display);font-weight:700;font-size:13px;color:#fff;
-}
-.metric-badge.success{background:var(--success);}
-.metric-badge.failure{background:var(--danger);}
+.header-count{font-weight:400;font-size:14px;color:var(--text-tertiary);margin-left:4px;}
 
 .token-box{
   display:flex;align-items:center;gap:8px;
@@ -194,17 +163,7 @@ button.ghost:active{background:var(--surface-alt);}
 .tab:hover{color:var(--text);}
 .tab.active{background:var(--brand);color:#fff;}
 
-/* ---------- Bot list ---------- */
-.list-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;}
-.list-title{font-family:var(--font-display);font-weight:700;font-size:17px;}
-.list-count{font-family:var(--font-mono);font-size:12px;color:var(--text-tertiary);margin-left:10px;}
-
-.board{
-  display:grid;
-  grid-template-columns:repeat(auto-fill, minmax(270px, 1fr));
-  align-items:start;
-  gap:14px;
-}
+/* ---------- Bot list (genuine table, not cards) ---------- */
 
 .empty-state{
   display:none;text-align:center;padding:52px 24px;
@@ -218,59 +177,52 @@ button.ghost:active{background:var(--surface-alt);}
   text-decoration:underline;cursor:pointer;background:none;border:none;
 }
 
-.row{
-  display:flex;flex-direction:column;gap:10px;
-  padding:18px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-card);
-  transition:box-shadow .18s ease, border-color .18s ease, transform .18s ease;
+.table-card{
+  background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-card);overflow:hidden;
 }
-.row:hover{border-color:#D4D4D8;box-shadow:var(--shadow-hover);transform:translateY(-2px);}
+.table-head{
+  display:grid;grid-template-columns:2.2fr 1fr 1fr 1.3fr 90px 100px;gap:16px;
+  padding:13px 20px;border-bottom:1px solid var(--border);
+  font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);
+  text-transform:uppercase;letter-spacing:.08em;
+}
+.board{min-width:640px;} /* lets the table scroll horizontally on narrow screens instead of breaking */
+.table-scroll{overflow-x:auto;}
 
-.card-top{display:flex;align-items:flex-start;justify-content:space-between;}
-.avatar{
-  position:relative;width:36px;height:36px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-display);font-weight:700;font-size:13px;
+.row{
+  display:grid;grid-template-columns:2.2fr 1fr 1fr 1.3fr 90px 100px;gap:16px;align-items:center;
+  padding:14px 20px;border-bottom:1px solid var(--border);transition:background .15s;
 }
-.avatar.price{background:rgba(29,78,216,.12);color:var(--cat-price);}
-.avatar.finance{background:rgba(124,58,237,.12);color:var(--cat-finance);}
-.avatar.social{background:rgba(219,39,119,.12);color:var(--cat-social);}
+.row:last-child{border-bottom:none;}
+.row:hover{background:var(--canvas);}
+
+.cell-bot{display:flex;align-items:center;gap:12px;min-width:0;}
+.avatar{
+  position:relative;width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-weight:700;font-size:12.5px;
+}
+.avatar.price{background:rgba(29,78,216,.15);color:var(--cat-price);}
+.avatar.finance{background:rgba(124,58,237,.15);color:var(--cat-finance);}
+.avatar.social{background:rgba(219,39,119,.15);color:var(--cat-social);}
 .avatar.none{background:var(--surface-alt);color:var(--text-secondary);}
 .avatar .light{
-  position:absolute;bottom:-2px;right:-2px;width:12px;height:12px;border-radius:50%;
+  position:absolute;bottom:-2px;right:-2px;width:11px;height:11px;border-radius:50%;
   background:var(--text-tertiary);border:2.5px solid var(--bg);
 }
 .light.success{background:var(--success);}
 .light.failure{background:var(--danger);}
 .light.pending{background:var(--text-tertiary);animation:pulse 1.4s ease-in-out infinite;}
 
-.name{font-family:var(--font-display);font-weight:600;font-size:15.5px;letter-spacing:-0.01em;}
+.name{font-family:var(--font-display);font-weight:600;font-size:14.5px;letter-spacing:-0.01em;}
 .name a{color:var(--text);text-decoration:none;}
 .name a:hover{text-decoration:underline;}
-
-.pill-row{display:flex;flex-wrap:wrap;gap:6px;}
-.pill{
-  font-family:var(--font-mono);font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;
-  padding:3px 9px;border-radius:var(--radius-pill);color:#fff;flex-shrink:0;
-}
-.pill.price{background:var(--cat-price);}
-.pill.finance{background:var(--cat-finance);}
-.pill.social{background:var(--cat-social);}
-.pill.success{background:var(--success);}
-.pill.failure{background:var(--danger);}
-.pill.pending{background:var(--text-secondary);}
-.pill.unknown{background:var(--text-tertiary);}
-
-.meta{font-family:var(--font-mono);font-size:11.5px;color:var(--text-tertiary);}
-
-.pulse-track{display:flex;gap:3px;align-items:flex-end;height:18px;}
-.pulse-bar{width:5px;border-radius:1px;background:var(--border);}
-.pulse-bar.success{background:var(--success);}
-.pulse-bar.failure{background:var(--danger);}
+.meta{font-family:var(--font-mono);font-size:11px;color:var(--text-tertiary);margin-top:3px;}
 
 .mail-line{
-  font-family:var(--font-mono);font-size:11.5px;color:var(--text-secondary);
-  cursor:pointer;display:flex;align-items:center;gap:6px;max-width:100%;
+  font-family:var(--font-mono);font-size:11px;color:var(--text-secondary);margin-top:3px;
+  cursor:pointer;display:flex;align-items:center;gap:5px;max-width:100%;
 }
 .mail-line:hover{color:var(--text);}
 .mail-line .ico{color:var(--text-tertiary);flex-shrink:0;display:inline-flex;}
@@ -278,51 +230,63 @@ button.ghost:active{background:var(--surface-alt);}
 .mail-line.empty{color:var(--text-tertiary);cursor:default;}
 .mail-line.empty:hover{color:var(--text-tertiary);}
 
+/* Category: colored dot + plain label — matches the TYPE column exactly */
+.dot-label{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--text);white-space:nowrap;}
+.dot-label .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;background:var(--text-tertiary);}
+.dot-label.price .dot{background:var(--cat-price);}
+.dot-label.finance .dot{background:var(--cat-finance);}
+.dot-label.social .dot{background:var(--cat-social);}
+
+/* Status: soft-tint pill — matches the STATUS column exactly (a different pattern from category, confirmed by direct evidence) */
+.status-pill{
+  display:inline-block;font-size:12px;font-weight:600;
+  padding:4px 11px;border-radius:var(--radius-pill);white-space:nowrap;
+}
+.status-pill.success{background:rgba(30,138,76,.12);color:var(--success);}
+.status-pill.failure{background:rgba(193,60,48,.12);color:var(--danger);}
+.status-pill.pending{background:var(--surface-alt);color:var(--text-secondary);}
+.status-pill.unknown{background:var(--canvas);color:var(--text-tertiary);}
+
+.pulse-track{display:flex;gap:3px;align-items:flex-end;height:18px;}
+.pulse-bar{width:5px;border-radius:1px;background:var(--border);}
+.pulse-bar.success{background:var(--success);}
+.pulse-bar.failure{background:var(--danger);}
+
+.cell-time{font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);text-align:right;}
+
 .mail-panel{
+  grid-column:1 / -1;
   max-height:0;opacity:0;overflow:hidden;margin:0;padding:0 14px;
   background:var(--canvas);border:1px solid transparent;border-left:3px solid var(--text);
   border-radius:0 var(--radius-md) var(--radius-md) 0;
   font-family:var(--font-mono);font-size:12px;line-height:1.7;
-  transition:max-height .25s ease, opacity .2s ease, padding .25s ease;
+  transition:max-height .25s ease, opacity .2s ease, margin-top .25s ease, padding .25s ease;
 }
-.mail-panel.open{max-height:400px;opacity:1;padding:12px 14px;border-color:var(--border);}
+.mail-panel.open{max-height:400px;opacity:1;margin-top:14px;padding:14px;border-color:var(--border);}
 .mail-panel .subject{color:var(--text);font-weight:600;margin-bottom:6px;}
 .mail-panel .body-text{color:var(--text-secondary);white-space:pre-wrap;}
 .mail-panel .sent{color:var(--text-tertiary);font-size:11px;margin-top:10px;}
 
-.card-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:2px;}
-.chip{
-  font-family:var(--font-mono);font-size:10.5px;color:var(--text-secondary);
-  background:var(--canvas);border:1px solid var(--border);
-  padding:3px 9px;border-radius:6px;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
 .run-btn{
-  font-family:var(--font-body);font-size:12.5px;font-weight:600;
+  font-family:var(--font-body);font-size:12px;font-weight:600;
   background:var(--brand);border:1px solid var(--brand);color:#fff;
   padding:8px 14px;border-radius:var(--radius-sm);cursor:pointer;text-align:center;
-  transition:.15s;flex-shrink:0;
+  transition:.15s;justify-self:end;
 }
 .run-btn:hover{background:var(--brand-dark);border-color:var(--brand-dark);}
 .run-btn:active:not(:disabled){transform:scale(.96);}
 .run-btn:disabled{opacity:.3;cursor:not-allowed;background:var(--surface-alt);border-color:var(--border);color:var(--text-secondary);}
 .run-btn.busy{background:var(--bg);color:var(--brand);border-color:var(--brand);}
 
-footer{margin-top:56px;font-family:var(--font-mono);font-size:11.5px;color:var(--text-tertiary);line-height:1.8;}
-footer a{color:var(--text-tertiary);}
-footer code{background:var(--surface-alt);padding:1px 6px;border-radius:4px;color:var(--text);}
-
 /* ---------- Responsive ---------- */
-@media (max-width:900px){
-  .content-columns{flex-direction:column;}
-  .side-column{width:100%;}
-}
 @media (max-width:640px){
-  .sidebar{display:none;}
   .app-shell{display:block;}
+  .sidebar{width:100%;position:static;padding:20px 16px 0;}
+  .sidebar-label:not(.sidebar-label-2){display:none;} /* "views" label — filter-tabs replaces this */
+  .sidebar nav{display:none;} /* the nav-item links — filter-tabs replaces this */
+  .sidebar-label-2{margin-top:0;}
   .topbar-search{display:none;}
   .filter-tabs{display:flex;}
-  .board{grid-template-columns:1fr;}
   h1{font-size:22px;}
 }
 </style>
@@ -353,84 +317,56 @@ footer code{background:var(--surface-alt);padding:1px 6px;border-radius:4px;colo
       <a class="nav-item finance" data-filter="finance"><span class="dot"></span>Finance<span class="count" id="countFinance">—</span></a>
       <a class="nav-item social" data-filter="social"><span class="dot"></span>Social<span class="count" id="countSocial">—</span></a>
     </nav>
+
+    <div class="sidebar-label sidebar-label-2">connect</div>
+    <div class="sidebar-token">
+      <div class="token-box">
+        <label for="tok">TOKEN</label>
+        <input id="tok" type="password" placeholder="paste a fine-grained PAT to enable Run now">
+      </div>
+      <div class="side-actions">
+        <button class="ghost" id="saveTok">save</button>
+        <button class="ghost" id="refresh" title="Refresh now">↻</button>
+      </div>
+      <div class="rate" id="rateInfo"></div>
+      <div class="rate" id="lastUpdated"></div>
+    </div>
   </aside>
 
   <main class="main-content">
 <div class="wrap">
 
   <header>
-    <div class="eyebrow"><span class="dot"></span>fleet status · live</div>
-    <h1>tuongphantrue<span> / emailer fleet</span></h1>
-    <div class="sub">
-      Nine small bots, each scraping a number and mailing it out on a schedule.
-      This reads their run history from the
-      <a href="https://docs.github.com/en/rest/actions/workflow-runs" target="_blank" rel="noopener">GitHub Actions API</a>,
-      and the last email each one sent, straight out of the repo — nothing outside GitHub involved.
-      Click a bot's mail line to expand it.
-    </div>
+    <h1>Bot fleet<span class="header-count" id="listCount"> — bots</span></h1>
   </header>
 
-  <div class="content-columns">
-    <div class="side-column">
-      <div class="side-card">
-        <div class="side-card-title">Fleet overview</div>
-        <div class="metric-row">
-          <span class="metric-label">Bots tracked</span>
-          <span class="metric-value" id="statTotal">—</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Healthy</span>
-          <span class="metric-badge success" id="statHealthy">—</span>
-        </div>
-        <div class="metric-row">
-          <span class="metric-label">Failing</span>
-          <span class="metric-badge failure" id="statFailing">—</span>
-        </div>
-      </div>
-      <div class="side-card">
-        <div class="side-card-title">Controls</div>
-        <div class="token-box">
-          <label for="tok">TOKEN</label>
-          <input id="tok" type="password" placeholder="paste a fine-grained PAT to enable Run now">
-        </div>
-        <div class="side-actions">
-          <button class="ghost" id="saveTok">save locally</button>
-          <button class="ghost" id="refresh">↻ refresh</button>
-        </div>
-        <div class="rate" id="rateInfo"></div>
-        <div class="rate" id="lastUpdated"></div>
-      </div>
-    </div>
+  <div class="filter-tabs">
+    <button class="tab active" data-filter="all">All</button>
+    <button class="tab" data-filter="price">Price</button>
+    <button class="tab" data-filter="finance">Finance</button>
+    <button class="tab" data-filter="social">Social</button>
+  </div>
 
-    <div class="list-column">
-      <div class="filter-tabs">
-        <button class="tab active" data-filter="all">All</button>
-        <button class="tab" data-filter="price">Price</button>
-        <button class="tab" data-filter="finance">Finance</button>
-        <button class="tab" data-filter="social">Social</button>
-      </div>
-
-      <div class="list-header">
-        <div>
-          <span class="list-title">Bot fleet</span><span class="list-count" id="listCount">— bots</span>
-        </div>
+  <div class="table-card">
+    <div class="table-scroll">
+      <div class="table-head">
+        <div>bot</div>
+        <div>category</div>
+        <div>status</div>
+        <div>history</div>
+        <div style="text-align:right">last run</div>
+        <div></div>
       </div>
       <div class="board" id="board">
         <!-- rows injected here -->
       </div>
-      <div class="empty-state" id="emptyState">
-        <div>no bots match<span class="detail" id="emptyStateDetail"></span></div>
-        <button class="clear-btn" id="clearFiltersBtn">clear filters</button>
-      </div>
     </div>
   </div>
+  <div class="empty-state" id="emptyState">
+    <div>no bots match<span class="detail" id="emptyStateDetail"></span></div>
+    <button class="clear-btn" id="clearFiltersBtn">clear filters</button>
+  </div>
 
-  <footer>
-    which repos to track live in <code>config.json</code> — this page shouldn't need editing again<br>
-    run status via api.github.com · unauthenticated reads, 60 req/hr per IP<br>
-    last email per bot read from <code>latest.json</code> in each repo via raw.githubusercontent.com — no auth, separate limit<br>
-    a github token (fine-grained: Actions read/write, or classic: repo scope) is only used client-side to trigger runs
-  </footer>
 </div>
   </main>
 </div>
@@ -524,8 +460,10 @@ function applyFilter(){
   });
 
   const total = REPOS ? REPOS.length : 0;
+  const healthy = document.querySelectorAll('.light.success').length;
+  const countText = visible === total ? `${total} bots` : `${visible} of ${total}`;
   const listCount = document.getElementById('listCount');
-  if(listCount) listCount.textContent = visible === total ? ` — ${total} bots` : ` — ${visible} of ${total}`;
+  if(listCount) listCount.textContent = ` — ${countText} · ${healthy} healthy`;
 
   const emptyState = document.getElementById('emptyState');
   if(visible === 0){
@@ -552,9 +490,7 @@ function updateSidebarCounts(){
 }
 
 function refreshStats(){
-  document.getElementById('statTotal').textContent = REPOS.length;
-  document.getElementById('statHealthy').textContent = document.querySelectorAll('.light.success').length;
-  document.getElementById('statFailing').textContent = document.querySelectorAll('.light.failure').length;
+  applyFilter(); // re-derives the header's "N bots · N healthy" text as each repo's status resolves
 }
 
 function updateLastRefreshed(){
@@ -607,28 +543,25 @@ function rowSkeleton(repo){
   const cat = repo.category || 'none';
   return `
   <div class="row" id="row-${repo.name}" data-category="${cat}">
-    <div class="card-top">
+    <div class="cell-bot">
       <div class="avatar ${cat}">${initial}<div class="light"></div></div>
-      <span class="pill status-pill unknown">checking</span>
+      <div style="min-width:0">
+        <div class="name"><a href="https://github.com/${OWNER}/${repo.name}" target="_blank" rel="noopener">${repo.name}</a></div>
+        <div class="meta">loading…</div>
+        <div class="mail-line empty" id="mail-line-${repo.name}" tabindex="0" role="button" aria-expanded="false"><span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-10 5L2 7"/></svg></span><span class="subj">—</span></div>
+      </div>
     </div>
-    <div class="name"><a href="https://github.com/${OWNER}/${repo.name}" target="_blank" rel="noopener">${repo.name}</a></div>
-    ${repo.category ? `<div class="pill-row"><span class="pill ${repo.category}">${repo.category}</span></div>` : ''}
-    <div class="meta">loading…</div>
+    <div class="dot-label ${cat}"><span class="dot"></span>${repo.category || '—'}</div>
+    <div class="status-pill unknown status-cell">checking</div>
     <div class="pulse-track"></div>
-    <div class="mail-line empty" id="mail-line-${repo.name}" tabindex="0" role="button" aria-expanded="false"><span class="ico"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="m22 7-10 5L2 7"/></svg></span><span class="subj">—</span></div>
+    <div class="cell-time">—</div>
+    <button class="run-btn" disabled>Run now</button>
     <div class="mail-panel" id="mail-panel-${repo.name}"></div>
-    <div class="card-footer">
-      <span class="chip">${repo.workflow}</span>
-      <button class="run-btn" disabled>Run now</button>
-    </div>
   </div>`;
 }
 
 function renderAll(){
   board.innerHTML = REPOS.map(rowSkeleton).join('');
-  document.getElementById('statTotal').textContent = '—';
-  document.getElementById('statHealthy').textContent = '—';
-  document.getElementById('statFailing').textContent = '—';
   applyFilter();
   REPOS.forEach(loadRepo);
   REPOS.forEach(loadLatestEmail);
@@ -654,19 +587,20 @@ async function loadRepo(repo){
     const latest = runs[0];
     const info = conclusionInfo(latest);
     row.querySelector('.light').className = `light ${info.cls}`;
-    row.querySelector('.meta').textContent = latest
-      ? `#${latest.run_number} · ${latest.event} · ${timeAgo(latest.run_started_at || latest.created_at)}`
-      : 'no workflow runs found';
-    row.querySelector('.status-pill').className = `pill status-pill ${info.cls}`;
-    row.querySelector('.status-pill').textContent = info.label;
+    row.querySelector('.meta').textContent = latest ? `#${latest.run_number} · ${latest.event}` : 'no workflow runs found';
+    const statusCell = row.querySelector('.status-cell');
+    statusCell.className = `status-pill status-cell ${info.cls}`;
+    statusCell.textContent = info.label;
+    row.querySelector('.cell-time').textContent = latest ? timeAgo(latest.run_started_at || latest.created_at) : '—';
     row.querySelector('.pulse-track').innerHTML = pulseBars(runs);
     const btn = row.querySelector('.run-btn');
     btn.disabled = false;
     btn.addEventListener('click', () => triggerRun(repo, btn));
   }catch(e){
     row.querySelector('.meta').textContent = `unreachable (${e.message})`;
-    row.querySelector('.status-pill').className = 'pill status-pill unknown';
-    row.querySelector('.status-pill').textContent = 'no data';
+    const statusCell = row.querySelector('.status-cell');
+    statusCell.className = 'status-pill status-cell unknown';
+    statusCell.textContent = 'no data';
   }
   refreshStats();
 }
@@ -674,7 +608,7 @@ async function loadRepo(repo){
 async function triggerRun(repo, btn){
   const token = localStorage.getItem('gh_pat');
   if(!token){
-    alert('Paste a token in the Controls card and click "save locally" first — a fine-grained PAT with Actions read/write (or a classic PAT with repo scope) is needed to trigger runs.');
+    alert('Paste a token in the sidebar and click "save" first — a fine-grained PAT with Actions read/write (or a classic PAT with repo scope) is needed to trigger runs.');
     return;
   }
   btn.disabled = true; btn.classList.add('busy'); btn.textContent = 'sending…';
