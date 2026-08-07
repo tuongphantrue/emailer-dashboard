@@ -92,17 +92,31 @@ body{
 }
 .topbar-search:focus-within .kbd-hint{display:none;}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:16px;}
+.sidebar-toggle{
+  background:none;border:none;cursor:pointer;color:var(--text-secondary);
+  display:flex;align-items:center;padding:4px;border-radius:6px;transition:.15s;
+}
+.sidebar-toggle:hover{color:var(--text);background:var(--canvas);}
+.app-shell.collapsed .sidebar{display:none;}
 .topbar-link{font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);text-decoration:none;}
 .topbar-link:hover{color:var(--text);}
 
 /* ---------- Shell: sidebar + main ---------- */
-.app-shell{display:flex;align-items:flex-start;max-width:1300px;margin:0 auto;}
-.sidebar{width:220px;flex-shrink:0;padding:32px 16px;position:sticky;top:57px;}
+.app-shell{display:flex;max-width:1300px;margin:0 auto;}
+.sidebar{width:220px;flex-shrink:0;padding:32px 16px;position:sticky;top:57px;border-right:1px solid var(--border);background:var(--canvas);}
 .sidebar-label{
   font-family:var(--font-mono);font-size:10.5px;color:var(--text-tertiary);
   text-transform:uppercase;letter-spacing:.08em;padding:0 12px;margin-bottom:8px;
 }
-.sidebar-label-2{margin-top:24px;}
+.sidebar-section{border-top:1px solid var(--border);margin-top:20px;padding-top:20px;}
+summary.sidebar-label{
+  cursor:pointer;list-style:none;
+  display:flex;align-items:center;justify-content:space-between;
+}
+summary.sidebar-label::-webkit-details-marker{display:none;}
+summary.sidebar-label::marker{content:'';}
+.chevron{color:var(--text-tertiary);transition:transform .15s;flex-shrink:0;}
+details[open] > summary .chevron{transform:rotate(90deg);}
 .nav-item{
   display:flex;align-items:center;gap:10px;
   padding:9px 12px;border-radius:10px;
@@ -121,7 +135,7 @@ body{
 
 .sidebar-token{padding:0 12px;}
 
-.main-content{flex:1;min-width:0;}
+.main-content{flex:1;min-width:0;background:var(--bg);}
 .wrap{padding:40px 24px 60px;}
 
 /* ---------- Page header ---------- */
@@ -281,10 +295,10 @@ button.ghost:active{background:var(--surface-alt);}
 /* ---------- Responsive ---------- */
 @media (max-width:640px){
   .app-shell{display:block;}
-  .sidebar{width:100%;position:static;padding:20px 16px 0;}
-  .sidebar-label:not(.sidebar-label-2){display:none;} /* "views" label — filter-tabs replaces this */
+  .sidebar{width:100%;position:static;padding:20px 16px 0;border-right:none;border-bottom:1px solid var(--border);}
+  div.sidebar-label{display:none;} /* "views" label — filter-tabs replaces this */
   .sidebar nav{display:none;} /* the nav-item links — filter-tabs replaces this */
-  .sidebar-label-2{margin-top:0;}
+  .sidebar-section{margin-top:0;border-top:none;padding-top:0;}
   .topbar-search{display:none;}
   .filter-tabs{display:flex;}
   h1{font-size:22px;}
@@ -304,11 +318,14 @@ button.ghost:active{background:var(--surface-alt);}
     <kbd class="kbd-hint">Ctrl+K</kbd>
   </div>
   <div class="topbar-right">
+    <button class="sidebar-toggle" id="sidebarToggle" title="Toggle sidebar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+    </button>
     <a class="topbar-link" id="ghOrgLink" href="#" target="_blank" rel="noopener">GitHub ↗</a>
   </div>
 </div>
 
-<div class="app-shell">
+<div class="app-shell" id="appShell">
   <aside class="sidebar">
     <div class="sidebar-label">views</div>
     <nav>
@@ -318,8 +335,12 @@ button.ghost:active{background:var(--surface-alt);}
       <a class="nav-item social" data-filter="social"><span class="dot"></span>Social<span class="count" id="countSocial">—</span></a>
     </nav>
 
-    <div class="sidebar-label sidebar-label-2">connect</div>
-    <div class="sidebar-token">
+    <details class="sidebar-section" open>
+      <summary class="sidebar-label">
+        connect
+        <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </summary>
+      <div class="sidebar-token">
       <div class="token-box">
         <label for="tok">TOKEN</label>
         <input id="tok" type="password" placeholder="paste a fine-grained PAT to enable Run now">
@@ -331,6 +352,7 @@ button.ghost:active{background:var(--surface-alt);}
       <div class="rate" id="rateInfo"></div>
       <div class="rate" id="lastUpdated"></div>
     </div>
+    </details>
   </aside>
 
   <main class="main-content">
@@ -419,6 +441,9 @@ document.getElementById('saveTok').addEventListener('click', () => {
   renderAll();
 });
 document.getElementById('refresh').addEventListener('click', renderAll);
+document.getElementById('sidebarToggle').addEventListener('click', () => {
+  document.getElementById('appShell').classList.toggle('collapsed');
+});
 
 function setFilter(filter){
   currentFilter = filter;
